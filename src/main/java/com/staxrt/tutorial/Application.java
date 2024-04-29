@@ -1,22 +1,20 @@
 package com.staxrt.tutorial;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.context.event.ApplicationReadyEvent;
+import org.springframework.context.event.EventListener;
 
-/**
- * The type Application.
- *
- * @author Givantha Kalansuriya
- */
 @SpringBootApplication
 public class Application {
 
-  /**
-   * The entry point of application.
-   *
-   * @param args the input arguments
-   */
-  public static void main(String[] args) {
-		SpringApplication.run(Application.class, args);
+	@Autowired
+	private EmailService senderService;
+
+	public static void main(String[] args) {
+
+	  SpringApplication.run(Application.class, args);
 	}
+
 }

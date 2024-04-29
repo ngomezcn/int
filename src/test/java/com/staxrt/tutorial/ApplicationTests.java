@@ -51,7 +51,7 @@ public class ApplicationTests {
 	@Test
 	public void testCreateUser() {
 		User user = new User();
-		user.setEmail("admin@gmail.com");
+		user.setEmailAddress("admin@gmail.com");
 		user.setFirstName("admin");
 		user.setLastName("admin");
 		user.setCreatedBy("admin");
