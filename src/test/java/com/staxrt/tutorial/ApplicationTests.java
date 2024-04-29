@@ -44,7 +44,7 @@ public class ApplicationTests {
 	@Test
 	public void testGetUserById() {
 		User user = restTemplate.getForObject(getRootUrl() + "/users/1", User.class);
-		System.out.println(user.getFirstName());
+		System.out.println(user.getUsername());
 		Assert.assertNotNull(user);
 	}
 
@@ -52,10 +52,7 @@ public class ApplicationTests {
 	public void testCreateUser() {
 		User user = new User();
 		user.setEmailAddress("admin@gmail.com");
-		user.setFirstName("admin");
-		user.setLastName("admin");
-		user.setCreatedBy("admin");
-		user.setUpdatedBy("admin");
+		user.setUsername("admin");
 
 		ResponseEntity<User> postResponse = restTemplate.postForEntity(getRootUrl() + "/users", user, User.class);
 		Assert.assertNotNull(postResponse);
@@ -66,8 +63,7 @@ public class ApplicationTests {
 	public void testUpdatePost() {
 		int id = 1;
 		User user = restTemplate.getForObject(getRootUrl() + "/users/" + id, User.class);
-		user.setFirstName("admin1");
-		user.setLastName("admin2");
+		user.setUsername("admin1");
 
 		restTemplate.put(getRootUrl() + "/users/" + id, user);
 

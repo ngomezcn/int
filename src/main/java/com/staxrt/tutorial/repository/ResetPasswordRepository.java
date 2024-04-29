@@ -11,4 +11,7 @@ import java.util.List;
 @Repository
 public interface ResetPasswordRepository extends JpaRepository<ResetPassword, Long> {
     List<ResetPassword> findByEmailAddressAndCode(String emailAddress,String code);
+
+    void deleteByEmailAddress(String emailAddress);
+
 }

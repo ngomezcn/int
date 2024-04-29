@@ -24,7 +24,7 @@ import com.staxrt.tutorial.dto.AuthDTOS.AuthUserDTO;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
-                                            
+
 import javax.persistence.*;
 
 import java.util.Date;
@@ -36,11 +36,9 @@ import java.util.Date;
 public class User {
 
     public User(AuthUserDTO user) {
-        this.firstName = user.firstName;
-        this.lastName = user.lastName;
+        this.username = user.username;
         this.emailAddress = user.emailAddress;
-        this.passwordHash = user.password; // ONLY DEVELOPMENT
-        this.passwordSalt = user.password; // ONLY DEVELOPMENT
+        this.password = user.password; // ONLY DEVELOPMENT
     }
 
     public User() {
@@ -51,23 +49,18 @@ public class User {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
 
-    @Column(name = "first_name", nullable = false)
-    private String firstName;
+    @Column(name = "role", nullable = false, unique = true)
+    private String role;
 
-    @Column(name = "last_name", nullable = false)
-    private String lastName;
+    @Column(name = "username", nullable = false, unique = true)
+    private String username;
 
     @Column(name = "email_address", nullable = false, unique = true)
     private String emailAddress;
 
-    @Column(name = "password_hash", nullable = false)
-    private String passwordHash;
+    @Column(name = "password", nullable = false)
+    private String password;
 
-    @Column(name = "password_salt", nullable = false)
-    private String passwordSalt;
-
-    @Column(name = "is_teacher", nullable = false)
-    private Boolean isTeacher = false;
 
     @Column(name = "is_verified", nullable = false)
     private Boolean isVerified = false;
@@ -82,85 +75,67 @@ public class User {
     @Column(name = "updated_at", nullable = false)
     private Date updatedAt;
 
-
-    public void setPasswordHash(String passwordHash) {
-        this.passwordHash = passwordHash;
+    public String getUsername() {
+        return username;
     }
 
-    public void setPasswordSalt(String passwordSalt) {
-        this.passwordSalt = passwordSalt;
+    public void setUsername(String username) {
+        this.username = username;
     }
 
-    public void setTeacher(Boolean teacher) {
-        isTeacher = teacher;
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public String getPassword() {
+        return password;
     }
 
     public void setVerified(Boolean verified) {
         isVerified = verified;
     }
 
-    public String getPasswordHash() {
-        return passwordHash;
-    }
-
-    public String getPasswordSalt() {
-        return passwordSalt;
-    }
-
-    public Boolean getTeacher() {
-        return isTeacher;
-    }
-
     public Boolean getVerified() {
         return isVerified;
     }
 
-  public long getId() {
+    public long getId() {
         return id;
     }
 
-  public void setId(long id) {
+    public void setId(long id) {
         this.id = id;
     }
 
-  public String getFirstName() {
-        return firstName;
-    }
-
-  public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
-
-  public String getLastName() {
-        return lastName;
-    }
-
-  public void setLastName(String lastName) {
-        this.lastName = lastName;
-    }
-
-  public String getEmailAddress() {
+    public String getEmailAddress() {
         return emailAddress;
     }
 
-  public void setEmailAddress(String emailAddress) {
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
+    }
+
+    public void setEmailAddress(String emailAddress) {
         this.emailAddress = emailAddress;
     }
 
-  public Date getCreatedAt() {
+    public Date getCreatedAt() {
         return createdAt;
     }
 
-  public void setCreatedAt(Date createdAt) {
+    public void setCreatedAt(Date createdAt) {
         this.createdAt = createdAt;
     }
 
-  public Date getUpdatedAt() {
+    public Date getUpdatedAt() {
         return updatedAt;
     }
 
-  public void setUpdatedAt(Date updatedAt) {
+    public void setUpdatedAt(Date updatedAt) {
         this.updatedAt = updatedAt;
     }
-
 }

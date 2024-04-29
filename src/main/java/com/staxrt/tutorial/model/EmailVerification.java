@@ -1,5 +1,6 @@
 package com.staxrt.tutorial.model;
 
+import com.staxrt.tutorial.util.RandomCode;
 import org.hibernate.annotations.CreationTimestamp;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
@@ -13,15 +14,13 @@ import java.util.Random;
 @EntityListeners(AuditingEntityListener.class)
 public class EmailVerification {
 
-    Random random = new Random();
-
     public EmailVerification() {
 
     }
 
     public EmailVerification(String emailAddress) {
         this.emailAddress = emailAddress;
-        this.code = String.valueOf(10000 + random.nextInt(90000));
+        this.code = RandomCode.get();
     }
 
     @Id
