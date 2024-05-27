@@ -1,4 +1,4 @@
-package com.staxrt.tutorial.model;
+package com.staxrt.tutorial.entity;
 
 import com.staxrt.tutorial.util.RandomCode;
 import org.hibernate.annotations.CreationTimestamp;
@@ -6,20 +6,19 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
 import java.util.Date;
-import java.util.Random;
 
 
 @Entity
 @Table(name = "email_verification")
 @EntityListeners(AuditingEntityListener.class)
-public class EmailVerification {
+public class EmailVerificationEntity {
 
-    public EmailVerification() {
+    public EmailVerificationEntity() {
 
     }
 
-    public EmailVerification(String emailAddress) {
-        this.emailAddress = emailAddress;
+    public EmailVerificationEntity(String email) {
+        this.email = email;
         this.code = RandomCode.get();
     }
 
@@ -27,8 +26,8 @@ public class EmailVerification {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
 
-    @Column(name = "email_address", nullable = false)
-    private String emailAddress;
+    @Column(name = "email", nullable = false)
+    private String email;
 
     @Column(name = "code", nullable = false)
     private String code;
@@ -46,8 +45,8 @@ public class EmailVerification {
         return code;
     }
 
-    public String getEmailAddress() {
-        return emailAddress;
+    public String getemail() {
+        return email;
     }
 
     public long getId() {
@@ -58,8 +57,8 @@ public class EmailVerification {
         this.id = id;
     }
 
-    public void setEmailAddress(String emailAddress) {
-        this.emailAddress = emailAddress;
+    public void setemail(String email) {
+        this.email = email;
     }
 
     public void setCode(String code) {

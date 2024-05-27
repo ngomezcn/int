@@ -1,22 +1,21 @@
-package com.staxrt.tutorial.model;
+package com.staxrt.tutorial.entity;
 
 import com.staxrt.tutorial.util.RandomCode;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
-import java.util.Random;
 
 @Entity
 @Table(name = "reset_password")
 @EntityListeners(AuditingEntityListener.class)
-public class ResetPassword {
+public class ResetPasswordEntity {
 
-    public ResetPassword(String emailAddress) {
-        this.emailAddress = emailAddress;
+    public ResetPasswordEntity(String email) {
+        this.email = email;
         this.code = RandomCode.get();
     }
 
-    public ResetPassword() {
+    public ResetPasswordEntity() {
 
     }
 
@@ -24,14 +23,14 @@ public class ResetPassword {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
 
-    @Column(name = "email_address", nullable = false)
-    private String emailAddress;
+    @Column(name = "email", nullable = false)
+    private String email;
 
     @Column(name = "code", nullable = false)
     private String code;
 
-    public String getEmailAddress() {
-        return emailAddress;
+    public String getEmail() {
+        return email;
     }
 
     public String getCode() {

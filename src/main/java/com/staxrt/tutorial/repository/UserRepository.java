@@ -1,19 +1,21 @@
 package com.staxrt.tutorial.repository;
 
-import com.staxrt.tutorial.model.EmailVerification;
-import com.staxrt.tutorial.model.User;
+import com.staxrt.tutorial.entity.UserEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface UserRepository extends JpaRepository<User, Long> {
+public interface UserRepository extends JpaRepository<UserEntity, Long> {
 
-    User findByEmailAddress(String emailAddress);
+    UserEntity getByEmail(String email);
+    Optional<UserEntity> findByEmail(String email);
 
-    User findByEmailAddressAndPassword(String emailAddress, String password);
+    UserEntity findByemailAndPassword(String email, String password);
 
-    Optional<User> findByUsername(String username);
+    Optional<UserEntity> findByUsername(String username);
+    UserEntity getByUsername(String username);
+
+
 }

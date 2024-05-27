@@ -30,7 +30,7 @@ public class EmailService {
 
     }
 
-    public void sendEmailFromTemplate(String to, String subject, String htmlTemplate) throws MessagingException, IOException {
+    public void sendHtmlEmail(String to, String subject, String htmlTemplate) throws MessagingException, IOException {
         MimeMessage message = mailSender.createMimeMessage();
 
         //message.setFrom(new InternetAddress("sender@example.com"));

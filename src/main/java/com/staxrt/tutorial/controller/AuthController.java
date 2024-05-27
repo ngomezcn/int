@@ -1,15 +1,10 @@
 package com.staxrt.tutorial.controller;
 
-import com.staxrt.tutorial.util.EmailService;
-import com.staxrt.tutorial.dto.AuthDTOS.*;
-import com.staxrt.tutorial.model.EmailVerification;
-import com.staxrt.tutorial.model.ResetPassword;
-import com.staxrt.tutorial.model.User;
-import com.staxrt.tutorial.repository.EmailVerificationRepository;
-import com.staxrt.tutorial.repository.ResetPasswordRepository;
-import com.staxrt.tutorial.repository.UserRepository;
-import com.staxrt.tutorial.util.HtmlTemplate;
+import com.staxrt.tutorial.dto.JwtValidationDTO;
+import com.staxrt.tutorial.services.AuthService;
+import com.staxrt.tutorial.dto.authDTOS.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -21,11 +16,89 @@ import javax.mail.MessagingException;
 import javax.transaction.Transactional;
 import javax.validation.Valid;
 import java.io.IOException;
-import java.util.List;
 
 @RestController
-@RequestMapping("/api/v1")
+@RequestMapping("/api/v1/auth")
 public class AuthController {
+
+    private final AuthService authService;
+
+    @Autowired
+    public AuthController(AuthService authService) {
+        this.authService = authService;
+    }
+
+    @Transactional
+    @PostMapping("/jwt-validation")
+    public ResponseEntity<Object> jwtValidation(@Valid @RequestBody JwtValidationDTO jwtValidationDTO) {
+        if (authService.validateJwtToken(jwtValidationDTO.getToken())) {
+            return ResponseEntity.ok().build();
+        }
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+    }
+
+    @Transactional
+    @PostMapping("/log-in")
+    public ResponseEntity<LoginResponseDTO> logIn(@Valid @RequestBody LogInDTO authUserDTO) {
+        HttpHeaders headers = new HttpHeaders();
+        LoginResponseDTO response;
+
+
+            response = authService.authenticateUser(authUserDTO);
+            headers.add(HttpHeaders.AUTHORIZATION, response.getAuthorization());
+            return ResponseEntity.ok().headers(headers).body(response);
+
+    }
+
+    @Transactional
+    @PostMapping("/email-verification")
+    public ResponseEntity<LoginResponseDTO> emailVerification(@Valid @RequestBody SignUpDTO verificationDTO) throws MessagingException, IOException {
+        LoginResponseDTO response = authService.verifyEmail(verificationDTO);
+        HttpHeaders headers = new HttpHeaders();
+
+        if (response == null) {
+            return ResponseEntity.notFound().build();
+        }
+        headers.add(HttpHeaders.AUTHORIZATION, response.getAuthorization());
+        return ResponseEntity.ok().headers(headers).body(response);
+    }
+
+    @PostMapping("/sign-up")
+    public ResponseEntity<Object> createUser(@Valid @RequestBody AuthUserDTO newUser) {
+        try {
+            authService.registerUser(newUser);
+            return ResponseEntity.ok().build();
+        } catch (IllegalArgumentException | MessagingException | IOException ex) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).build();
+        }
+    }
+
+    @PostMapping("/reset-password")
+    public ResponseEntity<Object> resetPassword(@Valid @RequestBody ResetPasswordDTO resetPasswordDTO) throws MessagingException, IOException {
+        authService.initiatePasswordReset(resetPasswordDTO);
+        return ResponseEntity.ok().build();
+    }
+
+    @Transactional
+    @PostMapping("/create-new-password")
+    public ResponseEntity<Object> createNewPassword(@Valid @RequestBody NewPasswordDTO newPasswordDTO) {
+        try {
+            authService.updatePassword(newPasswordDTO);
+            return ResponseEntity.ok().build();
+        } catch (IllegalArgumentException ex) {
+            return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).build();
+        }
+    }
+}
+
+/*@RestController
+@RequestMapping("/api/v1/auth")
+public class AuthController {
+
+    @Value("${upload.dir}")
+    String uploadDir;
+
+    AvatarService avatarService = new AvatarService();
 
     static private final String rootPath = Thread.currentThread().getContextClassLoader().getResource("").getPath();
     static private final String configPath = rootPath;
@@ -42,25 +115,53 @@ public class AuthController {
     @Autowired
     private ResetPasswordRepository resetPasswordRepository;
 
+    @Autowired
+    private  AuthenticationManager authenticationManager;
+    @Autowired
+    private JwtTokenUtil jwtTokenUtil;
+
+    @Transactional
+    @PostMapping("/jwt-validation")
+    public ResponseEntity<Object> jwtValidation(@Valid @RequestBody JwtValidationDTO jwtValidationDTO) throws MessagingException, IOException {
+
+         if(jwtValidationDTO.token != null && jwtTokenUtil.validateToken(jwtValidationDTO.token))
+        {
+
+            return ResponseEntity.ok().build();
+        }
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+
+    }
+
     @Transactional
     @PostMapping("/log-in")
-    public ResponseEntity<Object> logIn(@Valid @RequestBody LogInDTO authUserDTO) throws MessagingException, IOException {
+    public ResponseEntity<LoginResponseDTO> logIn(@Valid @RequestBody LogInDTO authUserDTO) throws MessagingException, IOException {
 
-        User user = userRepository.findByEmailAddressAndPassword(authUserDTO.emailAddress, authUserDTO.password);
+        try {
+            Authentication authenticate = authenticationManager
+                    .authenticate(
+                            new UsernamePasswordAuthenticationToken(
+                                    authUserDTO.email, authUserDTO.password
+                            )
+                    );
 
-        // Temporal check only development
-        if(user == null)
-        {
+            UserEntity userEntity = (UserEntity) authenticate.getPrincipal();
+
+            LoginResponseDTO response = new LoginResponseDTO();
+            response.displayName = userEntity.getUsername();
+            response.email = userEntity.getEmail();
+            response.authorization = jwtTokenUtil.generateToken(userEntity);
+
+            HttpHeaders headers = new HttpHeaders();
+            headers.add(HttpHeaders.AUTHORIZATION, jwtTokenUtil.generateToken(userEntity)); // Reemplaza "tuTokenDeAutorización" con el token real
+
+            return ResponseEntity.ok().headers(headers).body(response);
+                   // /*.header(
+                   //         HttpHeaders.AUTHORIZATION,
+                  //          jwtTokenUtil.generateToken(user)
+                   // ) //.build();//.body(response);
+        } catch (BadCredentialsException ex) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-        }
-
-        if(user.getVerified())
-        {
-            // good
-            return ResponseEntity.status(HttpStatus.OK).build();
-
-        } else {
-            return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).build();
         }
     }
 
@@ -68,7 +169,7 @@ public class AuthController {
     @PostMapping("/email-verification")
     public ResponseEntity<Object> emailVerification(@Valid @RequestBody SignUpDTO verificationDTO) throws MessagingException, IOException {
 
-        List<EmailVerification> result = emailVerificationRepository.findByEmailAddressAndCode(verificationDTO.emailAddress, verificationDTO.code);
+        List<EmailVerificationEntity> result = emailVerificationRepository.findByEmailAndCode(verificationDTO.email, verificationDTO.code);
 
         if(result.isEmpty())
         {
@@ -76,37 +177,51 @@ public class AuthController {
 
         } else {
 
-            User user = userRepository.findByEmailAddress(verificationDTO.emailAddress);
-            user.setVerified(true);
-            final User updatedUser = userRepository.save(user);
+            UserEntity userEntity = userRepository.getByEmail(verificationDTO.email);
+            userEntity.setEnabled(true);
+            final UserEntity updatedUserEntity = userRepository.save(userEntity);
 
-            emailVerificationRepository.deleteByEmailAddress(verificationDTO.emailAddress);
+            emailVerificationRepository.deleteByEmail(verificationDTO.email);
 
-            return ResponseEntity.ok().build();
+            LoginResponseDTO response = new LoginResponseDTO();
+            response.displayName = userEntity.getUsername();
+            response.email = userEntity.getEmail();
+            response.authorization = jwtTokenUtil.generateToken(userEntity);
+
+            HttpHeaders headers = new HttpHeaders();
+            headers.add(HttpHeaders.AUTHORIZATION, jwtTokenUtil.generateToken(userEntity)); // Reemplaza "tuTokenDeAutorización" con el token real
+
+            avatarService.createDefaultAvatar(userEntity.getUsername(), uploadDir);
+
+            return ResponseEntity.ok().headers(headers).body(response);
         }
     }
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     @PostMapping("/sign-up")
     public ResponseEntity<Object> createUser(@Valid @RequestBody AuthUserDTO newUser) throws MessagingException, IOException {
 
         // Is the user already registered?
-        if (userRepository.findByEmailAddress(newUser.emailAddress) != null)
+        if (userRepository.getByEmail(newUser.email) != null || userRepository.getByUsername(newUser.email) != null)
         {
             return ResponseEntity.status(HttpStatus.CONFLICT).build();
         }
 
-        User user = new User(newUser);
-        userRepository.save(user);
+        newUser.password = passwordEncoder.encode(newUser.password);
+        UserEntity userEntity = new UserEntity(newUser);
+        userRepository.save(userEntity);
 
-        EmailVerification newEmailVerification = new EmailVerification(user.getEmailAddress());
-        emailVerificationRepository.save(newEmailVerification);
+        EmailVerificationEntity newEmailVerificationEntity = new EmailVerificationEntity(userEntity.getEmail());
+        emailVerificationRepository.save(newEmailVerificationEntity);
 
         HtmlTemplate htmlTemplate = new HtmlTemplate(configPath + "email_verification.html"); // TODO: Improve the way to handle the html path
-        htmlTemplate.assign("${name}", user.getUsername());
-        htmlTemplate.assign("${code}", newEmailVerification.getCode());
+        htmlTemplate.assign("${name}", userEntity.getUsername());
+        htmlTemplate.assign("${code}", newEmailVerificationEntity.getCode());
         String html = htmlTemplate.build();
 
-        senderService.sendEmailFromTemplate(user.getEmailAddress(), "Quiz Project Email Verification", html);
+        senderService.sendHtmlEmail(userEntity.getEmail(), "Quiz Project Email Verification", html);
 
         return ResponseEntity.ok().build();
     }
@@ -114,20 +229,20 @@ public class AuthController {
     @PostMapping("/reset-password")
     public ResponseEntity<Object> resetPassword(@Valid @RequestBody ResetPasswordDTO resetPasswordDTO) throws MessagingException, IOException {
 
-        User user = userRepository.findByEmailAddress(resetPasswordDTO.emailAddress);
-        if(user == null)
+        UserEntity userEntity = userRepository.getByEmail(resetPasswordDTO.email);
+        if(userEntity == null)
         {
             return ResponseEntity.ok().build(); // If the user does not exist we are still returning 200 as a security reason
         }
 
-        ResetPassword resetPassword = new ResetPassword(resetPasswordDTO.emailAddress);
-        resetPasswordRepository.save(resetPassword);
+        ResetPasswordEntity resetPasswordEntity = new ResetPasswordEntity(resetPasswordDTO.email);
+        resetPasswordRepository.save(resetPasswordEntity);
 
         HtmlTemplate htmlTemplate = new HtmlTemplate(configPath + "reset_password.html"); // TODO: Improve the way to handle the html path
-        htmlTemplate.assign("${code}", resetPassword.getCode());
+        htmlTemplate.assign("${code}", resetPasswordEntity.getCode());
         String html = htmlTemplate.build();
 
-        senderService.sendEmailFromTemplate(resetPassword.getEmailAddress(), "Quiz Project Reset Password", html);
+        senderService.sendHtmlEmail(resetPasswordEntity.getemail(), "Quiz Project Reset Password", html);
 
         return ResponseEntity.ok().build();
     }
@@ -136,7 +251,7 @@ public class AuthController {
     @PostMapping("/create-new-password")
     public ResponseEntity<Object> createNewPassword(@Valid @RequestBody NewPasswordDTO newPasswordDTO) throws MessagingException, IOException {
 
-        List<ResetPassword> result = resetPasswordRepository.findByEmailAddressAndCode(newPasswordDTO.emailAddress, newPasswordDTO.code);
+        List<ResetPasswordEntity> result = resetPasswordRepository.findByEmailAndCode(newPasswordDTO.email, newPasswordDTO.code);
 
         if(result.isEmpty())
         {
@@ -144,13 +259,17 @@ public class AuthController {
 
         } else {
 
-            User user = userRepository.findByEmailAddress(newPasswordDTO.emailAddress);
-            user.setPassword(newPasswordDTO.password);
-            final User updatedUser = userRepository.save(user);
+            UserEntity userEntity = userRepository.getByEmail(newPasswordDTO.email);
+            userEntity.setPassword(newPasswordDTO.password);
+            final UserEntity updatedUserEntity = userRepository.save(userEntity);
 
-            resetPasswordRepository.deleteByEmailAddress(newPasswordDTO.emailAddress);
+            resetPasswordRepository.deleteByEmail(newPasswordDTO.email);
 
             return ResponseEntity.ok().build();
         }
     }
-}
+
+    public void setAuthenticationManager(AuthenticationManager authenticationManager) {
+        this.authenticationManager = authenticationManager;
+    }
+}*/

@@ -1,11 +1,10 @@
 package com.staxrt.tutorial.security;
 
-import com.staxrt.tutorial.model.User;
+import com.staxrt.tutorial.entity.UserEntity;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
 import java.io.Serializable;
@@ -44,8 +43,8 @@ public class JwtTokenUtil implements Serializable {
         return expiration.before(new Date());
     }
 
-    public String generateToken(User user) {
-        return doGenerateToken(user.getUsername());
+    public String generateToken(UserEntity userEntity) {
+        return doGenerateToken(userEntity.getUsername());
     }
 
     private String doGenerateToken(String subject) {

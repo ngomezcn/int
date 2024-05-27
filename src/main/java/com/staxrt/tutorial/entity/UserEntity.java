@@ -18,30 +18,34 @@
  *
  */
 
-package com.staxrt.tutorial.model;
+package com.staxrt.tutorial.entity;
 
-import com.staxrt.tutorial.dto.AuthDTOS.AuthUserDTO;
+import com.staxrt.tutorial.dto.authDTOS.AuthUserDTO;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
 
+import java.util.Collection;
 import java.util.Date;
+import java.util.List;
 
 
 @Entity
 @Table(name = "users")
 @EntityListeners(AuditingEntityListener.class)
-public class User {
+public class UserEntity implements UserDetails  {
 
-    public User(AuthUserDTO user) {
+    public UserEntity(AuthUserDTO user) {
         this.username = user.username;
-        this.emailAddress = user.emailAddress;
+        this.email = user.email;
         this.password = user.password; // ONLY DEVELOPMENT
     }
 
-    public User() {
+    public UserEntity() {
 
     }
 
@@ -49,21 +53,17 @@ public class User {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
 
-    @Column(name = "role", nullable = false, unique = true)
-    private String role;
+    @Column(name = "role", nullable = false)
+    private String role = "S";
 
     @Column(name = "username", nullable = false, unique = true)
     private String username;
 
-    @Column(name = "email_address", nullable = false, unique = true)
-    private String emailAddress;
+    @Column(name = "email", nullable = false, unique = true)
+    private String email;
 
     @Column(name = "password", nullable = false)
     private String password;
-
-
-    @Column(name = "is_verified", nullable = false)
-    private Boolean isVerified = false;
 
     @CreationTimestamp
     @Temporal(TemporalType.TIMESTAMP)
@@ -75,8 +75,32 @@ public class User {
     @Column(name = "updated_at", nullable = false)
     private Date updatedAt;
 
-    public String getUsername() {
-        return username;
+    @Column(name = "isAccountNonExpired", nullable = false)
+    private Boolean isAccountNonExpired = true;
+
+    @Column(name = "isAccountNonLocked", nullable = false)
+    private Boolean isAccountNonLocked = true;
+
+    @Column(name = "isCredentialsNonExpired", nullable = false)
+    private Boolean isCredentialsNonExpired = true;
+
+    @Column(name = "isEnabled", nullable = false)
+    private Boolean isEnabled = false;
+
+    public void setAccountNonExpired(Boolean accountNonExpired) {
+        isAccountNonExpired = accountNonExpired;
+    }
+
+    public void setAccountNonLocked(Boolean accountNonLocked) {
+        isAccountNonLocked = accountNonLocked;
+    }
+
+    public void setCredentialsNonExpired(Boolean credentialsNonExpired) {
+        isCredentialsNonExpired = credentialsNonExpired;
+    }
+
+    public void setEnabled(Boolean enabled) {
+        isEnabled = enabled;
     }
 
     public void setUsername(String username) {
@@ -87,16 +111,38 @@ public class User {
         this.password = password;
     }
 
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return List.of();
+    }
+
     public String getPassword() {
         return password;
     }
 
-    public void setVerified(Boolean verified) {
-        isVerified = verified;
+    @Override
+    public String getUsername() {
+        return username;
     }
 
-    public Boolean getVerified() {
-        return isVerified;
+    @Override
+    public boolean isAccountNonExpired() {
+        return isAccountNonExpired;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return isAccountNonLocked;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return isCredentialsNonExpired;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return isEnabled;
     }
 
     public long getId() {
@@ -107,8 +153,8 @@ public class User {
         this.id = id;
     }
 
-    public String getEmailAddress() {
-        return emailAddress;
+    public String getEmail() {
+        return email;
     }
 
     public String getRole() {
@@ -119,8 +165,8 @@ public class User {
         this.role = role;
     }
 
-    public void setEmailAddress(String emailAddress) {
-        this.emailAddress = emailAddress;
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public Date getCreatedAt() {

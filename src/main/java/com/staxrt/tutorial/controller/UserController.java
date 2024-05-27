@@ -20,18 +20,13 @@
 
 package com.staxrt.tutorial.controller;
 
+import com.staxrt.tutorial.entity.UserEntity;
 import com.staxrt.tutorial.exception.ResourceNotFoundException;
-import com.staxrt.tutorial.model.User;
 import com.staxrt.tutorial.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
-import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * The type User controller.
@@ -45,14 +40,9 @@ public class UserController {
   @Autowired
   private UserRepository userRepository;
 
-  /**
-   * Get all users list.
-   *
-   * @return the list
-   */
   @GetMapping("/users")
-  public List<User> getAllUsers() {
-    List<User> a = userRepository.findAll();
+  public List<UserEntity> getAllUsers() {
+    List<UserEntity> a = userRepository.findAll();
      return a;
   }
 
