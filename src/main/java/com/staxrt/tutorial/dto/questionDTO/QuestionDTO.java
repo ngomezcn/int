@@ -10,7 +10,7 @@ public class QuestionDTO {
     private String question;
     private List<CategoryDTO> categories;
     private List<AnswerDTO> answers;
-    private QuestionSettingsDTO questionSettings;
+    private QuestionOptionsDTO QuestionOptions;
 
     public void setId(long id) {
         this.id = id;
@@ -44,11 +44,11 @@ public class QuestionDTO {
         this.answers = answers;
     }
 
-    public QuestionSettingsDTO getQuestionSettings() {
-        return questionSettings;
+    public QuestionOptionsDTO getQuestionOptions() {
+        return QuestionOptions;
     }
 
-    public void setQuestionSettings(QuestionSettingsDTO questionSettings) {
-        this.questionSettings = questionSettings;
+    public void setQuestionOptions(QuestionOptionsDTO QuestionOptions) {
+        this.QuestionOptions = QuestionOptions;
     }
 }

@@ -23,8 +23,8 @@ public class QuestionEntity extends AuditableEntity {
     private String mediaPath;
 
     @ManyToOne(fetch = FetchType.EAGER, optional = false)
-    @JoinColumn(name = "question_settings_id", nullable = false)
-    private QuestionSettingsEntity questionSettingsEntity;
+    @JoinColumn(name = "question_options_id", nullable = false)
+    private QuestionOptionsEntity QuestionOptionsEntity;
 
     @ManyToMany
     @JoinTable(
@@ -61,12 +61,12 @@ public class QuestionEntity extends AuditableEntity {
         this.mediaPath = mediaPath;
     }
 
-    public QuestionSettingsEntity getQuestionSettings() {
-        return questionSettingsEntity;
+    public QuestionOptionsEntity getQuestionOptions() {
+        return QuestionOptionsEntity;
     }
 
-    public void setQuestionSettings(QuestionSettingsEntity questionSettingsEntity) {
-        this.questionSettingsEntity = questionSettingsEntity;
+    public void setQuestionOptions(QuestionOptionsEntity QuestionOptionsEntity) {
+        this.QuestionOptionsEntity = QuestionOptionsEntity;
     }
 
     public List<CategoryEntity> getCategories() {

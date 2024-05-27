@@ -3,7 +3,7 @@ package com.staxrt.tutorial.services;
 import com.staxrt.tutorial.dto.AnswerDTO;
 import com.staxrt.tutorial.dto.questionDTO.CategoryDTO;
 import com.staxrt.tutorial.dto.questionDTO.QuestionDTO;
-import com.staxrt.tutorial.dto.questionDTO.QuestionSettingsDTO;
+import com.staxrt.tutorial.dto.questionDTO.QuestionOptionsDTO;
 import com.staxrt.tutorial.entity.question.CategoryEntity;
 import com.staxrt.tutorial.entity.question.QuestionEntity;
 import com.staxrt.tutorial.repository.CategoryRepository;
@@ -25,7 +25,7 @@ public class QuestionService {
     private AnswerService answerService;
 
     @Autowired
-    private QuestionSettingsService questionSettingsService;
+    private QuestionOptionsService QuestionOptionsService;
 
     List<QuestionEntity> questions;
 
@@ -34,7 +34,7 @@ public class QuestionService {
         QuestionDTO dto = new QuestionDTO();
         List<CategoryDTO> categoriesDto = new ArrayList<>();
         List<AnswerDTO> answersDto = new ArrayList<>();
-        QuestionSettingsDTO questionsSettingsDto = new QuestionSettingsDTO();
+        QuestionOptionsDTO questionsOptionsDto = new QuestionOptionsDTO();
 
         categoriesDto = question.getCategories().stream()
                 .map(categoryService::convertToDTO)
@@ -44,14 +44,14 @@ public class QuestionService {
                 .map(answerService::convertToDTO)
                 .collect(Collectors.toList());
 
-        questionsSettingsDto = questionSettingsService.convertToDTO(question.getQuestionSettings());
+        questionsOptionsDto = QuestionOptionsService.convertToDTO(question.getQuestionOptions());
 
         dto.setId(question.getId());
         dto.setQuestion(question.getQuestion());
 
         dto.setCategories(categoriesDto);
         dto.setAnswers(answersDto);
-        dto.setQuestionSettings(questionsSettingsDto);
+        dto.setQuestionOptions(questionsOptionsDto);
 
         return dto;
     }
