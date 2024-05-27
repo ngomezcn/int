@@ -1,4 +1,4 @@
-package com.staxrt.tutorial.dto.authDTOS;
+package com.staxrt.tutorial.dto;
 
 public class ResetPasswordDTO {
     public String email;

@@ -1,6 +1,6 @@
 package com.staxrt.tutorial.repository;
 
-import com.staxrt.tutorial.entity.question.CategoryEntity;
+import com.staxrt.tutorial.entity.CategoryEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

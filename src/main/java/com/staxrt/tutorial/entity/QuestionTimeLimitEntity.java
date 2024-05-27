@@ -31,7 +31,7 @@ import javax.persistence.*;
 public class QuestionTimeLimitEntity implements Comparable<QuestionTimeLimitEntity> {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
     @Column(name = "time_in_seconds", nullable = false, unique = true)

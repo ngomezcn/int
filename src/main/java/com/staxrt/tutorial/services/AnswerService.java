@@ -1,9 +1,7 @@
 package com.staxrt.tutorial.services;
 
 import com.staxrt.tutorial.dto.AnswerDTO;
-import com.staxrt.tutorial.dto.questionDTO.CategoryDTO;
-import com.staxrt.tutorial.entity.question.AnswerEntity;
-import com.staxrt.tutorial.entity.question.CategoryEntity;
+import com.staxrt.tutorial.entity.AnswerEntity;
 import org.springframework.stereotype.Service;
 
 @Service

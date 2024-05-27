@@ -1,6 +1,6 @@
 package com.staxrt.tutorial.services;
 
-import com.staxrt.tutorial.dto.authDTOS.*;
+import com.staxrt.tutorial.dto.*;
 import com.staxrt.tutorial.entity.*;
 import com.staxrt.tutorial.repository.*;
 import com.staxrt.tutorial.security.JwtTokenUtil;

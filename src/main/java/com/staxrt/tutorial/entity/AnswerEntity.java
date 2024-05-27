@@ -1,4 +1,4 @@
-package com.staxrt.tutorial.entity.question;
+package com.staxrt.tutorial.entity;
 
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
@@ -10,7 +10,7 @@ import javax.persistence.*;
 public class AnswerEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
     @Column(name = "number", nullable = true)

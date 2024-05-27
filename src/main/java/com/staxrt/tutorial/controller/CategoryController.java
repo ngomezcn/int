@@ -1,6 +1,6 @@
 package com.staxrt.tutorial.controller;
 
-import com.staxrt.tutorial.entity.question.CategoryEntity;
+import com.staxrt.tutorial.entity.CategoryEntity;
 import com.staxrt.tutorial.services.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;

@@ -1,6 +1,6 @@
 package com.staxrt.tutorial.controller;
 
-import com.staxrt.tutorial.dto.questionDTO.QuestionDTO;
+import com.staxrt.tutorial.dto.QuestionDTO;
 import com.staxrt.tutorial.services.QuestionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;

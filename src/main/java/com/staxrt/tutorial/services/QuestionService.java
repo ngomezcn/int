@@ -1,12 +1,7 @@
 package com.staxrt.tutorial.services;
 
-import com.staxrt.tutorial.dto.AnswerDTO;
-import com.staxrt.tutorial.dto.questionDTO.CategoryDTO;
-import com.staxrt.tutorial.dto.questionDTO.QuestionDTO;
-import com.staxrt.tutorial.dto.questionDTO.QuestionOptionsDTO;
-import com.staxrt.tutorial.entity.question.CategoryEntity;
-import com.staxrt.tutorial.entity.question.QuestionEntity;
-import com.staxrt.tutorial.repository.CategoryRepository;
+import com.staxrt.tutorial.dto.*;
+import com.staxrt.tutorial.entity.QuestionEntity;
 import com.staxrt.tutorial.repository.QuestionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -25,16 +20,20 @@ public class QuestionService {
     private AnswerService answerService;
 
     @Autowired
-    private QuestionOptionsService QuestionOptionsService;
+    private QuestionOptionsService questionOptionsService;
 
-    List<QuestionEntity> questions;
+    @Autowired
+    private ScoreByLevelService scoreByLevelService;
 
+    @Autowired
+    private QuestionRepository questionRepository;
 
     private QuestionDTO convertToDTO(QuestionEntity question) {
         QuestionDTO dto = new QuestionDTO();
         List<CategoryDTO> categoriesDto = new ArrayList<>();
         List<AnswerDTO> answersDto = new ArrayList<>();
         QuestionOptionsDTO questionsOptionsDto = new QuestionOptionsDTO();
+        ScoreByLevelDTO scoreByLevelDTO = new ScoreByLevelDTO();
 
         categoriesDto = question.getCategories().stream()
                 .map(categoryService::convertToDTO)
@@ -44,28 +43,26 @@ public class QuestionService {
                 .map(answerService::convertToDTO)
                 .collect(Collectors.toList());
 
-        questionsOptionsDto = QuestionOptionsService.convertToDTO(question.getQuestionOptions());
+        questionsOptionsDto = questionOptionsService.convertToDTO(question.getQuestionOptions());
+        scoreByLevelDTO = scoreByLevelService.convertToDTO(question.getScoreByLevel());
 
         dto.setId(question.getId());
         dto.setQuestion(question.getQuestion());
+        dto.setMediaPath(question.getMediaPath());
 
         dto.setCategories(categoriesDto);
         dto.setAnswers(answersDto);
         dto.setQuestionOptions(questionsOptionsDto);
+        dto.setScoreByLevel(scoreByLevelDTO);
 
         return dto;
     }
 
-    @Autowired
-    QuestionRepository questionRepository;
-
     public List<QuestionDTO> getAllQuestions() {
-        questions = questionRepository.findAll();
+        List<QuestionEntity> questions = questionRepository.findAll();
 
-        List<QuestionDTO> dtos = questions.stream()
-                .map(question -> convertToDTO(question))
+        return questions.stream()
+                .map(this::convertToDTO)
                 .collect(Collectors.toList());
-
-        return dtos;
     }
 }

@@ -1,8 +1,7 @@
 package com.staxrt.tutorial.controller;
 
-import com.staxrt.tutorial.dto.JwtValidationDTO;
+import com.staxrt.tutorial.dto.*;
 import com.staxrt.tutorial.services.AuthService;
-import com.staxrt.tutorial.dto.authDTOS.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -19,12 +18,12 @@ import java.io.IOException;
 
 @RestController
 @RequestMapping("/api/v1/auth")
-public class AuthController {
+public class AuthenticationController {
 
     private final AuthService authService;
 
     @Autowired
-    public AuthController(AuthService authService) {
+    public AuthenticationController(AuthService authService) {
         this.authService = authService;
     }
 

@@ -1,7 +1,7 @@
 package com.staxrt.tutorial.services;
 
-import com.staxrt.tutorial.dto.questionDTO.CategoryDTO;
-import com.staxrt.tutorial.entity.question.CategoryEntity;
+import com.staxrt.tutorial.dto.CategoryDTO;
+import com.staxrt.tutorial.entity.CategoryEntity;
 import com.staxrt.tutorial.repository.CategoryRepository;
 import org.jgrapht.Graph;
 import org.jgrapht.graph.DefaultEdge;

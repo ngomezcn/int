@@ -20,7 +20,7 @@
 
 package com.staxrt.tutorial.entity;
 
-import com.staxrt.tutorial.dto.authDTOS.AuthUserDTO;
+import com.staxrt.tutorial.dto.AuthUserDTO;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -50,7 +50,7 @@ public class UserEntity implements UserDetails  {
     }
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
     @Column(name = "role", nullable = false)

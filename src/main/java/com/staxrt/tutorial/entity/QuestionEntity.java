@@ -1,7 +1,5 @@
-package com.staxrt.tutorial.entity.question;
+package com.staxrt.tutorial.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.staxrt.tutorial.entity.AuditableEntity;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
@@ -13,7 +11,7 @@ import java.util.List;
 public class QuestionEntity extends AuditableEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
     @Column(name = "question", nullable = false)
@@ -25,6 +23,10 @@ public class QuestionEntity extends AuditableEntity {
     @ManyToOne(fetch = FetchType.EAGER, optional = false)
     @JoinColumn(name = "question_options_id", nullable = false)
     private QuestionOptionsEntity QuestionOptionsEntity;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "score_by_level_id")
+    private ScoreByLevelEntity scoreByLevel;
 
     @ManyToMany
     @JoinTable(
@@ -82,6 +84,30 @@ public class QuestionEntity extends AuditableEntity {
     }
 
     public void setAnswers(List<AnswerEntity> answerEntities) {
+        this.answerEntities = answerEntities;
+    }
+
+    public com.staxrt.tutorial.entity.QuestionOptionsEntity getQuestionOptionsEntity() {
+        return QuestionOptionsEntity;
+    }
+
+    public ScoreByLevelEntity getScoreByLevel() {
+        return scoreByLevel;
+    }
+
+    public List<AnswerEntity> getAnswerEntities() {
+        return answerEntities;
+    }
+
+    public void setQuestionOptionsEntity(com.staxrt.tutorial.entity.QuestionOptionsEntity questionOptionsEntity) {
+        QuestionOptionsEntity = questionOptionsEntity;
+    }
+
+    public void setScoreByLevel(ScoreByLevelEntity scoreByLevel) {
+        this.scoreByLevel = scoreByLevel;
+    }
+
+    public void setAnswerEntities(List<AnswerEntity> answerEntities) {
         this.answerEntities = answerEntities;
     }
 }

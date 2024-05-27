@@ -1,6 +1,4 @@
-package com.staxrt.tutorial.dto.authDTOS;
-
-import com.staxrt.tutorial.dto.UserDTO;
+package com.staxrt.tutorial.dto;
 
 public class AuthUserDTO extends UserDTO {
 
