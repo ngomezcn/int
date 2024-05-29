@@ -17,7 +17,7 @@ public class AvatarService {
 
     public void createDefaultAvatar(String username, String uploadDir) throws IOException
     {
-        String imageUrl = "https://ui-avatars.com/api/?background=0D8ABC&color=fff&name=" + username + "&length=2&bold=true";
+        String imageUrl = "https://ui-avatars.com/api/?background=0D8ABC&color=fff&name=" + username + "&length=2&bold=true"; // TODO: Obtener desdte application.properties
 
         RestTemplate restTemplate = new RestTemplate();
         ResponseEntity<byte[]> response = restTemplate.exchange(imageUrl, HttpMethod.GET, null, byte[].class);

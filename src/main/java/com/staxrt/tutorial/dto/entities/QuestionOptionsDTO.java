@@ -1,24 +1,12 @@
-package com.staxrt.tutorial.entity;
+package com.staxrt.tutorial.dto.entities;
 
 import com.staxrt.tutorial.enums.AnswerType;
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-import javax.persistence.*;
-
-@Entity
-@Table(name = "question_options")
-@EntityListeners(AuditingEntityListener.class)
-public class QuestionOptionsEntity {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+public class QuestionOptionsDTO {
     private long id;
 
-    @Enumerated(EnumType.STRING)
-    @Column(name = "answer_type", nullable = false)
     private AnswerType answerType;
 
-    @Column(name = "time_limit", nullable = false)
     private Integer timeLimit;
 
     public long getId() {

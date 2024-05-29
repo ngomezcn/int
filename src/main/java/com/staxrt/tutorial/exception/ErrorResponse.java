@@ -33,6 +33,8 @@ public class ErrorResponse {
   private String status;
   private String message;
   private String details;
+  private String exceptionClass;
+
 
   /**
    * Instantiates a new Error response.
@@ -42,11 +44,12 @@ public class ErrorResponse {
    * @param message the message
    * @param details the details
    */
-  public ErrorResponse(Date timestamp, String status, String message, String details) {
+  public ErrorResponse(Date timestamp, String status, String message, String details, String exceptionClass) {
     this.timestamp = timestamp;
     this.status = status;
     this.message = message;
     this.details = details;
+    this.exceptionClass = exceptionClass;
   }
 
   /**
@@ -119,5 +122,13 @@ public class ErrorResponse {
    */
   public void setDetails(String details) {
     this.details = details;
+  }
+
+  public String getExceptionClass() {
+    return exceptionClass;
+  }
+
+  public void setExceptionClass(String exceptionClass) {
+    this.exceptionClass = exceptionClass;
   }
 }

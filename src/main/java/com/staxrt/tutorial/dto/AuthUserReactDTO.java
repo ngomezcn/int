@@ -1,6 +1,6 @@
 package com.staxrt.tutorial.dto;
 
-public class LoginResponseDTO {
+public class AuthUserReactDTO {
     public String displayName;
     public String email;
     public String authorization;

@@ -1,6 +1,5 @@
 package com.staxrt.tutorial.services;
 
-import com.staxrt.tutorial.dto.CategoryDTO;
 import com.staxrt.tutorial.entity.CategoryEntity;
 import com.staxrt.tutorial.repository.CategoryRepository;
 import org.jgrapht.Graph;
@@ -73,13 +72,5 @@ public class CategoryService {
         return categoryGraph;
     }
 
-    public CategoryDTO convertToDTO(CategoryEntity category)
-    {
-        CategoryDTO dto = new CategoryDTO();
 
-        dto.setId(category.getId());
-        dto.setName(category.getName());
-
-        return dto;
-    }
 }

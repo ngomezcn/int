@@ -1,4 +1,4 @@
-package com.staxrt.tutorial.dto;
+package com.staxrt.tutorial.dto.entities;
 
 import com.staxrt.tutorial.enums.EducationLevel;
 

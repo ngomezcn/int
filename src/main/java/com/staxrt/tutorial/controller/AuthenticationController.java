@@ -1,7 +1,7 @@
 package com.staxrt.tutorial.controller;
 
 import com.staxrt.tutorial.dto.*;
-import com.staxrt.tutorial.services.AuthService;
+import com.staxrt.tutorial.services.AuthenticationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -20,14 +20,13 @@ import java.io.IOException;
 @RequestMapping("/api/v1/auth")
 public class AuthenticationController {
 
-    private final AuthService authService;
+    private final AuthenticationService authService;
 
     @Autowired
-    public AuthenticationController(AuthService authService) {
+    public AuthenticationController(AuthenticationService authService) {
         this.authService = authService;
     }
 
-    @Transactional
     @PostMapping("/jwt-validation")
     public ResponseEntity<Object> jwtValidation(@Valid @RequestBody JwtValidationDTO jwtValidationDTO) {
         if (authService.validateJwtToken(jwtValidationDTO.getToken())) {
@@ -36,23 +35,19 @@ public class AuthenticationController {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
     }
 
-    @Transactional
     @PostMapping("/log-in")
-    public ResponseEntity<LoginResponseDTO> logIn(@Valid @RequestBody LogInDTO authUserDTO) {
+    public ResponseEntity<AuthUserReactDTO> logIn(@Valid @RequestBody LogInDTO authUserDTO) throws MessagingException, IOException {
         HttpHeaders headers = new HttpHeaders();
-        LoginResponseDTO response;
+        AuthUserReactDTO response;
 
-
-            response = authService.authenticateUser(authUserDTO);
-            headers.add(HttpHeaders.AUTHORIZATION, response.getAuthorization());
-            return ResponseEntity.ok().headers(headers).body(response);
-
+        response = authService.authenticateUser(authUserDTO);
+        headers.add(HttpHeaders.AUTHORIZATION, response.getAuthorization());
+        return ResponseEntity.ok().headers(headers).body(response);
     }
 
-    @Transactional
     @PostMapping("/email-verification")
-    public ResponseEntity<LoginResponseDTO> emailVerification(@Valid @RequestBody SignUpDTO verificationDTO) throws MessagingException, IOException {
-        LoginResponseDTO response = authService.verifyEmail(verificationDTO);
+    public ResponseEntity<AuthUserReactDTO> emailVerification(@Valid @RequestBody SignUpDTO verificationDTO) throws MessagingException, IOException {
+        AuthUserReactDTO response = authService.verifyEmail(verificationDTO);
         HttpHeaders headers = new HttpHeaders();
 
         if (response == null) {
@@ -63,13 +58,9 @@ public class AuthenticationController {
     }
 
     @PostMapping("/sign-up")
-    public ResponseEntity<Object> createUser(@Valid @RequestBody AuthUserDTO newUser) {
-        try {
-            authService.registerUser(newUser);
-            return ResponseEntity.ok().build();
-        } catch (IllegalArgumentException | MessagingException | IOException ex) {
-            return ResponseEntity.status(HttpStatus.CONFLICT).build();
-        }
+    public ResponseEntity<Object> createUser(@Valid @RequestBody AuthUserDTO newUser) throws MessagingException, IOException {
+        authService.registerUser(newUser);
+        return ResponseEntity.ok().build();
     }
 
     @PostMapping("/reset-password")
@@ -78,7 +69,6 @@ public class AuthenticationController {
         return ResponseEntity.ok().build();
     }
 
-    @Transactional
     @PostMapping("/create-new-password")
     public ResponseEntity<Object> createNewPassword(@Valid @RequestBody NewPasswordDTO newPasswordDTO) {
         try {

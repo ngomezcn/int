@@ -1,11 +1,11 @@
-package com.staxrt.tutorial.services;
+package com.staxrt.tutorial.converter;
 
-import com.staxrt.tutorial.dto.QuestionOptionsDTO;
+import com.staxrt.tutorial.dto.entities.QuestionOptionsDTO;
 import com.staxrt.tutorial.entity.QuestionOptionsEntity;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
-@Service
-public class QuestionOptionsService {
+@Component
+public class QuestionOptionsConverter {
 
     public QuestionOptionsDTO convertToDTO(QuestionOptionsEntity QuestionOptions)
     {

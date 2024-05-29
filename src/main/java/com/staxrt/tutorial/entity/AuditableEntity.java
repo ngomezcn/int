@@ -40,7 +40,6 @@ public abstract class AuditableEntity {
         this.updatedAt = updatedAt;
     }
 
-
     public String getCreatedBy() {
         return createdBy;
     }

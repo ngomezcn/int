@@ -1,5 +1,10 @@
 package com.staxrt.tutorial.dto;
 
+import com.staxrt.tutorial.dto.entities.AnswerDTO;
+import com.staxrt.tutorial.dto.entities.CategoryDTO;
+import com.staxrt.tutorial.dto.entities.QuestionOptionsDTO;
+import com.staxrt.tutorial.dto.entities.ScoreByLevelDTO;
+
 import java.util.List;
 
 public class QuestionDTO {

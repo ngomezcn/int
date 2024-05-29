@@ -1,4 +1,4 @@
-package com.staxrt.tutorial.util;
+package com.staxrt.tutorial.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;
@@ -10,7 +10,7 @@ import javax.mail.internet.MimeMessage;
 import java.io.IOException;
 
 @Service
-public class EmailService {
+public class EmailSenderService {
 
     @Autowired
     private JavaMailSender mailSender;
@@ -25,9 +25,6 @@ public class EmailService {
         message.setText(body);
 
         mailSender.send(message);
-        System.out.println("saddddd donde donde donde done done done done done done done done ");
-
-
     }
 
     public void sendHtmlEmail(String to, String subject, String htmlTemplate) throws MessagingException, IOException {

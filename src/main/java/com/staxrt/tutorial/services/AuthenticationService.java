@@ -2,16 +2,19 @@ package com.staxrt.tutorial.services;
 
 import com.staxrt.tutorial.dto.*;
 import com.staxrt.tutorial.entity.*;
+import com.staxrt.tutorial.exception.UserAlreadyRegistered;
+import com.staxrt.tutorial.exception.UserAlreadyRegisteredAndVerifiedException;
 import com.staxrt.tutorial.repository.*;
 import com.staxrt.tutorial.security.JwtTokenUtil;
-import com.staxrt.tutorial.util.EmailService;
 import com.staxrt.tutorial.util.HtmlTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -21,7 +24,7 @@ import java.io.IOException;
 import java.util.List;
 
 @Service
-public class AuthService {
+public class AuthenticationService {
 
     @Value("${upload.dir}")
     private String uploadDir;
@@ -29,7 +32,7 @@ public class AuthService {
     private final AvatarService avatarService;
     private final UserRepository userRepository;
     private final EmailVerificationRepository emailVerificationRepository;
-    private final EmailService senderService;
+    private final EmailSenderService emailSenderService;
     private final ResetPasswordRepository resetPasswordRepository;
     private final AuthenticationManager authenticationManager;
     private final JwtTokenUtil jwtTokenUtil;
@@ -39,18 +42,18 @@ public class AuthService {
     private static final String configPath = rootPath;
 
     @Autowired
-    public AuthService(AvatarService avatarService,
-                       UserRepository userRepository,
-                       EmailVerificationRepository emailVerificationRepository,
-                       EmailService senderService,
-                       ResetPasswordRepository resetPasswordRepository,
-                       AuthenticationManager authenticationManager,
-                       JwtTokenUtil jwtTokenUtil,
-                       PasswordEncoder passwordEncoder) {
+    public AuthenticationService(AvatarService avatarService,
+                                 UserRepository userRepository,
+                                 EmailVerificationRepository emailVerificationRepository,
+                                 EmailSenderService senderService,
+                                 ResetPasswordRepository resetPasswordRepository,
+                                 AuthenticationManager authenticationManager,
+                                 JwtTokenUtil jwtTokenUtil,
+                                 PasswordEncoder passwordEncoder) {
         this.avatarService = avatarService;
         this.userRepository = userRepository;
         this.emailVerificationRepository = emailVerificationRepository;
-        this.senderService = senderService;
+        this.emailSenderService = senderService;
         this.resetPasswordRepository = resetPasswordRepository;
         this.authenticationManager = authenticationManager;
         this.jwtTokenUtil = jwtTokenUtil;
@@ -61,13 +64,22 @@ public class AuthService {
         return token != null && jwtTokenUtil.validateToken(token);
     }
 
-    public LoginResponseDTO authenticateUser(LogInDTO authUserDTO) throws BadCredentialsException {
-        Authentication authenticate = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(authUserDTO.getEmail(), authUserDTO.getPassword())
-        );
+    @Transactional(dontRollbackOn = {DisabledException.class})
+    public AuthUserReactDTO authenticateUser(LogInDTO dto) throws BadCredentialsException, MessagingException, IOException {
+        UserEntity userEntity = userRepository.findByEmail(dto.getEmail())
+                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
 
-        UserEntity userEntity = (UserEntity) authenticate.getPrincipal();
-        LoginResponseDTO response = new LoginResponseDTO();
+
+        try{
+            Authentication authenticate = authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(dto.getEmail(), dto.getPassword())
+            );
+        } catch (DisabledException exception) {
+            handleEmailVerification(userEntity.getEmail(), userEntity.getUsername());
+            throw exception;
+        }
+
+        AuthUserReactDTO response = new AuthUserReactDTO();
         response.setDisplayName(userEntity.getUsername());
         response.setEmail(userEntity.getEmail());
         response.setAuthorization(jwtTokenUtil.generateToken(userEntity));
@@ -75,7 +87,7 @@ public class AuthService {
     }
 
     @Transactional
-    public LoginResponseDTO verifyEmail(SignUpDTO verificationDTO) throws MessagingException, IOException {
+    public AuthUserReactDTO verifyEmail(SignUpDTO verificationDTO) throws MessagingException, IOException {
         List<EmailVerificationEntity> result = emailVerificationRepository.findByEmailAndCode(verificationDTO.getEmail(), verificationDTO.getCode());
 
         if (result.isEmpty()) {
@@ -89,7 +101,7 @@ public class AuthService {
 
         avatarService.createDefaultAvatar(userEntity.getUsername(), uploadDir);
 
-        LoginResponseDTO response = new LoginResponseDTO();
+        AuthUserReactDTO response = new AuthUserReactDTO();
         response.setDisplayName(userEntity.getUsername());
         response.setEmail(userEntity.getEmail());
         response.setAuthorization(jwtTokenUtil.generateToken(userEntity));
@@ -97,24 +109,37 @@ public class AuthService {
     }
 
     @Transactional
-    public void registerUser(AuthUserDTO newUser) throws MessagingException, IOException {
-        if (userRepository.getByEmail(newUser.getEmail()) != null || userRepository.getByUsername(newUser.getUsername()) != null) {
-            throw new IllegalArgumentException("User already exists");
+    public void registerUser(AuthUserDTO dto) throws MessagingException, IOException {
+        UserEntity findByUsername = userRepository.getByUsername(dto.getUsername());
+        UserEntity findByEmail = userRepository.getByEmail(dto.getEmail());
+
+        if(findByUsername != null || findByEmail != null) {
+            UserEntity user = (findByUsername != null) ? findByUsername : findByEmail;
+            if(user.isEnabled())
+            {
+                throw new UserAlreadyRegisteredAndVerifiedException("The user is already registered and verified.");
+            }
+            throw new UserAlreadyRegistered("The user is already registered.");
         }
 
-        newUser.setPassword(passwordEncoder.encode(newUser.getPassword()));
-        UserEntity userEntity = new UserEntity(newUser);
+        dto.setPassword(passwordEncoder.encode(dto.getPassword()));
+        UserEntity userEntity = new UserEntity(dto);
         userRepository.save(userEntity);
 
-        EmailVerificationEntity newEmailVerificationEntity = new EmailVerificationEntity(userEntity.getEmail());
+        handleEmailVerification(dto.email, dto.username);
+    }
+
+    private void handleEmailVerification(String email, String username) throws MessagingException, IOException {
+
+        EmailVerificationEntity newEmailVerificationEntity = new EmailVerificationEntity(email);
         emailVerificationRepository.save(newEmailVerificationEntity);
 
         HtmlTemplate htmlTemplate = new HtmlTemplate(configPath + "email_verification.html");
-        htmlTemplate.assign("${name}", userEntity.getUsername());
+        htmlTemplate.assign("${name}", username);
         htmlTemplate.assign("${code}", newEmailVerificationEntity.getCode());
         String html = htmlTemplate.build();
 
-        senderService.sendHtmlEmail(userEntity.getEmail(), "Quiz Project Email Verification", html);
+        emailSenderService.sendHtmlEmail(email, "Quiz Project Email Verification", html);
     }
 
     @Transactional
@@ -131,7 +156,7 @@ public class AuthService {
         htmlTemplate.assign("${code}", resetPasswordEntity.getCode());
         String html = htmlTemplate.build();
 
-        senderService.sendHtmlEmail(resetPasswordEntity.getEmail(), "Quiz Project Reset Password", html);
+        emailSenderService.sendHtmlEmail(resetPasswordEntity.getEmail(), "Quiz Project Reset Password", html);
     }
 
     @Transactional

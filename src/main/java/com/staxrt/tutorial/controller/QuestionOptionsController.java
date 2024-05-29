@@ -12,7 +12,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1")
-public class QuestionTimeLimitController {
+public class QuestionOptionsController {
 
     @Autowired
     private QuestionTimeLimitRepository timeLimitRepository;

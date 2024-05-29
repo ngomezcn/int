@@ -1,12 +1,11 @@
-package com.staxrt.tutorial.services;
+package com.staxrt.tutorial.converter;
 
-import com.staxrt.tutorial.dto.AnswerDTO;
+import com.staxrt.tutorial.dto.entities.AnswerDTO;
 import com.staxrt.tutorial.entity.AnswerEntity;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
-@Service
-public class AnswerService {
-
+@Component
+public class AnswerConverter {
     public AnswerDTO convertToDTO(AnswerEntity answer)
     {
         AnswerDTO dto = new AnswerDTO();

@@ -10,7 +10,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/category")
-public class CategoryController {
+public class CategoriesController {
 
     @Autowired
     private CategoryService categoryService;
@@ -38,6 +38,4 @@ public class CategoryController {
         categoryService.addCategoryRelation(parentId, childId);
         return ResponseEntity.ok().build();
     }
-
-    // Métodos adicionales para búsquedas complejas en el grafo
 }
