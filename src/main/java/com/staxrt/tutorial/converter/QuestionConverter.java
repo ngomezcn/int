@@ -1,8 +1,7 @@
 package com.staxrt.tutorial.converter;
 
 import com.staxrt.tutorial.dto.QuestionDTO;
-import com.staxrt.tutorial.dto.QuestionSearchDTO;
-import com.staxrt.tutorial.dto.QuestionSearchFilterDTO;
+import com.staxrt.tutorial.dto.QuestionSearchResultDTO;
 import com.staxrt.tutorial.dto.entities.AnswerDTO;
 import com.staxrt.tutorial.dto.entities.CategoryDTO;
 import com.staxrt.tutorial.dto.entities.QuestionOptionsDTO;
@@ -11,6 +10,7 @@ import com.staxrt.tutorial.entity.QuestionEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -60,8 +60,8 @@ public class QuestionConverter {
         return dto;
     }
 
-    public QuestionSearchDTO convertToQuestionSearchDTO(QuestionEntity question) {
-        QuestionSearchDTO dto = new QuestionSearchDTO();
+    public QuestionSearchResultDTO convertToQuestionSearchDTO(QuestionEntity question) {
+        QuestionSearchResultDTO dto = new QuestionSearchResultDTO();
 
         dto.setId(question.getId());
         dto.setQuestion(question.getQuestion());
@@ -71,7 +71,9 @@ public class QuestionConverter {
         dto.setTimeLimit(question.getQuestionOptionsEntity().getTimeLimit());
 
         dto.setCreatedBy(question.getCreatedBy());
-        dto.setCreatedAt(question.getCreatedAt());
+
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
+        dto.setCreatedAt(dateFormat.format(question.getCreatedAt()));
 
         return dto;
     }

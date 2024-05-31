@@ -20,12 +20,24 @@
 
 package com.staxrt.tutorial.controller;
 
+import com.staxrt.tutorial.dto.entities.UserDTO;
+import com.staxrt.tutorial.entity.QuestionTimeLimitEntity;
 import com.staxrt.tutorial.entity.UserEntity;
 import com.staxrt.tutorial.exception.ResourceNotFoundException;
 import com.staxrt.tutorial.repository.UserRepository;
+import com.staxrt.tutorial.services.AvatarService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -34,11 +46,14 @@ import java.util.List;
  * @author Givantha Kalansuriya
  */
 @RestController
-@RequestMapping("/api/v1")
+@RequestMapping("/api/v1/user")
 public class UserController {
 
   @Autowired
   private UserRepository userRepository;
+
+  @Autowired
+  AvatarService avatarService;
 
   @GetMapping("/users")
   public List<UserEntity> getAllUsers() {
@@ -46,77 +61,32 @@ public class UserController {
      return a;
   }
 
-  /**
-   * Gets users by id.
-   *
-   * @param userId the user id
-   * @return the users by id
-   * @throws ResourceNotFoundException the resource not found exception
+  @GetMapping("/teacher-roster")
+  public ResponseEntity<List<UserDTO>> getAllTimeLimits() {
 
-  @GetMapping("/users/{id}")
-  public ResponseEntity<User> getUsersById(@PathVariable(value = "id") Long userId)
-      throws ResourceNotFoundException {
-    User user =
-        userRepository
-            .findById(userId)
-            .orElseThrow(() -> new ResourceNotFoundException("User not found on :: " + userId));
-    return ResponseEntity.ok().body(user);
-  }*/
+      return ResponseEntity.ok(new ArrayList<>());
+  }
 
-  /**
-   * Create user user.
-   *
-   * @param user the user
-   * @return the user
+  @GetMapping("/avatar/{email}")
+  public ResponseEntity<Resource> getUserAvatar(@PathVariable String email) throws IOException, ResourceNotFoundException {
 
-  @PostMapping("/users")
-  public User createUser(@Valid @RequestBody User user) {
-    return userRepository.save(user);
-  }*/
+    Resource resource = avatarService.getAvatarImageByEmail(email);
 
-  /**
-   * Update user response entity.
-   *
-   * @param userId the user id
-   * @param userDetails the user details
-   * @return the response entity
-   * @throws ResourceNotFoundException the resource not found exception
+    return ResponseEntity.ok()
+            .contentType(MediaType.IMAGE_JPEG)
+            .body(resource);
+  }
 
-  @PutMapping("/users/{id}")
-  public ResponseEntity<User> updateUser(
-      @PathVariable(value = "id") Long userId, @Valid @RequestBody User userDetails)
-      throws ResourceNotFoundException {
+  @PostMapping("/create-avatar")
+  @ResponseBody
+  public ResponseEntity<String> createAvatar() throws IOException {
 
-    User user =
-        userRepository
-            .findById(userId)
-            .orElseThrow(() -> new ResourceNotFoundException("User not found on :: " + userId));
+    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+    UserEntity user = (UserEntity) authentication.getPrincipal();
 
-    user.setEmail(userDetails.getEmail());
-    user.setLastName(userDetails.getLastName());
-    user.setFirstName(userDetails.getFirstName());
-    user.setUpdatedAt(new Date());
-    final User updatedUser = userRepository.save(user);
-    return ResponseEntity.ok(updatedUser);
-  } */
 
-  /**
-   * Delete user map.
-   *
-   * @param userId the user id
-   * @return the map
-   * @throws Exception the exception
+    avatarService.createAvatar(user);
 
-  @DeleteMapping("/user/{id}")
-  public Map<String, Boolean> deleteUser(@PathVariable(value = "id") Long userId) throws Exception {
-    User user =
-        userRepository
-            .findById(userId)
-            .orElseThrow(() -> new ResourceNotFoundException("User not found on :: " + userId));
-
-    userRepository.delete(user);
-    Map<String, Boolean> response = new HashMap<>();
-    response.put("deleted", Boolean.TRUE);
-    return response;
-  }*/
+    return ResponseEntity.ok().build();
+  }
 }

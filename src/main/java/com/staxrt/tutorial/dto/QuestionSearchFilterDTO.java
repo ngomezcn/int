@@ -1,27 +1,24 @@
 package com.staxrt.tutorial.dto;
 
-import com.staxrt.tutorial.dto.entities.CategoryDTO;
-import com.staxrt.tutorial.enums.AnswerType;
-
 import java.util.Date;
 import java.util.List;
 
 public class QuestionSearchFilterDTO {
 
-    String question;
+    String searchValue;
     Date startDate;
     Date endDate;
     Boolean flagged;
     List<String> createdBy;
-    List<AnswerType> answerTypeList;
-    List<CategoryDTO> categories;
+    List<String> answerTypeList;
+    List<String> categories;
 
-    public String getQuestion() {
-        return question;
+    public String getSearchValue() {
+        return searchValue;
     }
 
-    public void setQuestion(String question) {
-        this.question = question;
+    public void setSearchValue(String searchValue) {
+        this.searchValue = searchValue;
     }
 
     public Date getStartDate() {
@@ -56,19 +53,19 @@ public class QuestionSearchFilterDTO {
         this.createdBy = createdBy;
     }
 
-    public List<AnswerType> getAnswerTypeList() {
+    public List<String> getAnswerTypeList() {
         return answerTypeList;
     }
 
-    public void setAnswerTypeList(List<AnswerType> answerTypeList) {
+    public void setAnswerTypeList(List<String> answerTypeList) {
         this.answerTypeList = answerTypeList;
     }
 
-    public List<CategoryDTO> getCategories() {
+    public List<String> getCategories() {
         return categories;
     }
 
-    public void setCategories(List<CategoryDTO> categories) {
+    public void setCategories(List<String> categories) {
         this.categories = categories;
     }
 }

@@ -19,12 +19,5 @@ public class UserDetailsServiceImpl implements UserDetailsService {
                 .withUsername(userEntity.getUsername())
                 .password(userEntity.getPassword())
                 .build();
-
-        /*Optional<User> domainUser = userService.findByUsername(username);
-        if (domainUser == null) {
-            throw new UsernameNotFoundException("Could not find user with name '" + username + "'");
-        }
-        //List<GrantedAuthority> roles = SecurityUtil.getRoles(domainUser);
-        return new User(domainUser, roles)*/
     }
 }

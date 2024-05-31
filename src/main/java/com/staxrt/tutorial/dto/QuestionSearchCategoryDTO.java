@@ -4,7 +4,9 @@ import java.util.List;
 
 public class QuestionSearchCategoryDTO {
     Long id;
+    String hierarchicalId = "";
     String name;
+    Boolean isChecked = false;
     List<QuestionSearchCategoryDTO> children;
 
     public Long getId() {
@@ -29,5 +31,21 @@ public class QuestionSearchCategoryDTO {
 
     public void setChildren(List<QuestionSearchCategoryDTO> children) {
         this.children = children;
+    }
+
+    public String getHierarchicalId() {
+        return hierarchicalId;
+    }
+
+    public void setHierarchicalId(String hierarchicalId) {
+        this.hierarchicalId = hierarchicalId;
+    }
+
+    public Boolean getChecked() {
+        return isChecked;
+    }
+
+    public void setChecked(Boolean checked) {
+        isChecked = checked;
     }
 }

@@ -8,7 +8,6 @@ import com.staxrt.tutorial.repository.*;
 import com.staxrt.tutorial.security.JwtTokenUtil;
 import com.staxrt.tutorial.util.HtmlTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.DisabledException;
@@ -25,9 +24,6 @@ import java.util.List;
 
 @Service
 public class AuthenticationService {
-
-    @Value("${upload.dir}")
-    private String uploadDir;
 
     private final AvatarService avatarService;
     private final UserRepository userRepository;
@@ -94,17 +90,17 @@ public class AuthenticationService {
             return null;
         }
 
-        UserEntity userEntity = userRepository.getByEmail(verificationDTO.getEmail());
-        userEntity.setEnabled(true);
-        userRepository.save(userEntity);
+        UserEntity user = userRepository.getByEmail(verificationDTO.getEmail());
+        user.setEnabled(true);
+        userRepository.save(user);
         emailVerificationRepository.deleteByEmail(verificationDTO.getEmail());
 
-        avatarService.createDefaultAvatar(userEntity.getUsername(), uploadDir);
+        avatarService.createAvatar(user);
 
         AuthUserReactDTO response = new AuthUserReactDTO();
-        response.setDisplayName(userEntity.getUsername());
-        response.setEmail(userEntity.getEmail());
-        response.setAuthorization(jwtTokenUtil.generateToken(userEntity));
+        response.setDisplayName(user.getUsername());
+        response.setEmail(user.getEmail());
+        response.setAuthorization(jwtTokenUtil.generateToken(user));
         return response;
     }
 

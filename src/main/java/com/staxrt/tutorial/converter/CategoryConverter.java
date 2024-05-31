@@ -1,5 +1,6 @@
 package com.staxrt.tutorial.converter;
 
+import com.staxrt.tutorial.dto.AddCategoryDTO;
 import com.staxrt.tutorial.dto.QuestionSearchCategoryDTO;
 import com.staxrt.tutorial.dto.QuestionSearchRootCategoryDTO;
 import com.staxrt.tutorial.dto.entities.CategoryDTO;
@@ -38,6 +39,7 @@ public class CategoryConverter {
         return dto;
     }
 
+
     public List<QuestionSearchCategoryDTO> convertToDTOList(List<CategoryEntity> categoryEntities) {
         List<QuestionSearchCategoryDTO> dtos = new ArrayList<>();
         for (CategoryEntity categoryEntity : categoryEntities) {
@@ -47,5 +49,12 @@ public class CategoryConverter {
             }
         }
         return dtos;
+    }
+
+    public CategoryEntity convertToEntity(String name) {
+        CategoryEntity categoryEntity = new CategoryEntity();
+        categoryEntity.setName(name);
+
+        return categoryEntity;
     }
 }

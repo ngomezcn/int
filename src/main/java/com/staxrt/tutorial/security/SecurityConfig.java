@@ -94,6 +94,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 // Our public endpoints
                 .antMatchers("/api/v1/auth/**").permitAll()
                 .antMatchers("/api/v1/images/**").permitAll()
+                .antMatchers("/api/v1/user/avatar/**").permitAll()
                 /*.antMatchers("/api/public/**").permitAll()
                 .antMatchers(HttpMethod.GET, "/api/author/**").permitAll()
                 .antMatchers(HttpMethod.POST, "/api/author/search").permitAll()

@@ -1,19 +1,18 @@
 package com.staxrt.tutorial.dto;
 
-import com.staxrt.tutorial.dto.entities.CategoryDTO;
 import com.staxrt.tutorial.enums.AnswerType;
 
-import java.util.Date;
 import java.util.List;
 
-public class QuestionSearchDTO {
+public class QuestionSearchResultDTO {
     Long id;
     String question;
     String mediaPath;
     String createdBy;
-    Date createdAt;
+    String createdAt;
     AnswerType answerType;
     Integer timeLimit;
+    List<String> categories;
 
     //List<CategoryDTO> categories;
 
@@ -49,11 +48,11 @@ public class QuestionSearchDTO {
         this.createdBy = createdBy;
     }
 
-    public Date getCreatedAt() {
+    public String getCreatedAt() {
         return createdAt;
     }
 
-    public void setCreatedAt(Date createdAt) {
+    public void setCreatedAt(String createdAt) {
         this.createdAt = createdAt;
     }
 

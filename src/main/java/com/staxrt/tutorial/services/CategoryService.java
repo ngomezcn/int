@@ -1,6 +1,9 @@
 package com.staxrt.tutorial.services;
 
+import com.staxrt.tutorial.converter.CategoryConverter;
+import com.staxrt.tutorial.dto.AddCategoryDTO;
 import com.staxrt.tutorial.entity.CategoryEntity;
+import com.staxrt.tutorial.repository.CategoryRelationRepository;
 import com.staxrt.tutorial.repository.CategoryRepository;
 import org.jgrapht.Graph;
 import org.jgrapht.graph.DefaultEdge;
@@ -18,18 +21,54 @@ public class CategoryService {
     @Autowired
     private CategoryRepository categoryRepository;
 
+    @Autowired
+    private CategoryConverter categoryConverter;
+
+    @Autowired
+    private CategoryRelationRepository categoryRelationRepository;
+
     private Graph<CategoryEntity, DefaultEdge> categoryGraph;
 
     public CategoryService() {
         categoryGraph = new SimpleDirectedGraph<>(DefaultEdge.class);
     }
 
-    public CategoryEntity saveCategory(CategoryEntity category) {
-        return categoryRepository.save(category);
+    @Transactional
+    public boolean deleteCategoryByName(String categoryName) {
+        Optional<CategoryEntity> optionalCategory = categoryRepository.findByName(categoryName);
+
+        if (optionalCategory.isPresent()) {
+            CategoryEntity category = optionalCategory.get();
+
+            if (category.getChildren().isEmpty()) {
+
+                categoryRelationRepository.deleteByChild(category.getId());
+
+                categoryRepository.delete(category);
+
+            } else {
+                throw new RuntimeException("No se puede eliminar la categoría porque tiene hijos.");
+            }
+        } else {
+            throw new RuntimeException("No se encontró la categoría con el nombre especificado.");
+        }
+
+        return true;
+    }
+
+    @Transactional
+    public CategoryEntity addCategory(String name) {
+        CategoryEntity category = categoryConverter.convertToEntity(name);
+        categoryRepository.save(category);
+        return category;
     }
 
     public Optional<CategoryEntity> getCategoryById(Long id) {
         return categoryRepository.findById(id);
+    }
+
+    public Optional<CategoryEntity> getCategoryByName(String name) {
+        return categoryRepository.findByName(name);
     }
 
     public List<CategoryEntity> getAllCategories() {
@@ -37,9 +76,19 @@ public class CategoryService {
     }
 
     @Transactional
-    public void addCategoryRelation(Long parentId, Long childId) {
-        Optional<CategoryEntity> parent = categoryRepository.findById(parentId);
-        Optional<CategoryEntity> child = categoryRepository.findById(childId);
+    public void addCategoryRelation(String parentName, String childName) {
+        Optional<CategoryEntity> parent = categoryRepository.findByName(parentName);
+        Optional<CategoryEntity> child = categoryRepository.findByName(childName);
+
+        if(!parent.isPresent())
+        {
+            parent = Optional.ofNullable(this.addCategory(parentName));
+        }
+
+        if(!child.isPresent())
+        {
+            child = Optional.ofNullable(this.addCategory(childName));
+        }
 
         if (parent.isPresent() && child.isPresent()) {
             CategoryEntity parentCategory = parent.get();
