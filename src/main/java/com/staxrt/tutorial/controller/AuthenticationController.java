@@ -30,7 +30,8 @@ public class AuthenticationController {
     @PostMapping("/sign-up")
     public ResponseEntity<Object> createUser(@Valid @RequestBody AuthUserDTO newUser) throws MessagingException, IOException {
         authService.registerUser(newUser);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok()
+                .build();
     }
 
     @PostMapping("/email-verification")
@@ -42,7 +43,8 @@ public class AuthenticationController {
             return ResponseEntity.notFound().build();
         }
         headers.add(HttpHeaders.AUTHORIZATION, response.getAuthorization());
-        return ResponseEntity.ok().headers(headers).body(response);
+        return ResponseEntity.ok()
+                .headers(headers).body(response);
     }
 
     @PostMapping("/jwt-validation")
@@ -50,7 +52,8 @@ public class AuthenticationController {
         if (authService.validateJwtToken(jwtValidationDTO.getToken())) {
             return ResponseEntity.ok().build();
         }
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        return ResponseEntity.status(
+                HttpStatus.UNAUTHORIZED).build();
     }
 
     @PostMapping("/log-in")
@@ -60,13 +63,15 @@ public class AuthenticationController {
 
         response = authService.authenticateUser(authUserDTO);
         headers.add(HttpHeaders.AUTHORIZATION, response.getAuthorization());
-        return ResponseEntity.ok().headers(headers).body(response);
+        return ResponseEntity.ok()
+                .headers(headers).body(response);
     }
 
     @PostMapping("/reset-password")
     public ResponseEntity<Object> resetPassword(@Valid @RequestBody ResetPasswordDTO resetPasswordDTO) throws MessagingException, IOException {
         authService.initiatePasswordReset(resetPasswordDTO);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok()
+                .build();
     }
 
     @PostMapping("/create-new-password")
@@ -75,7 +80,8 @@ public class AuthenticationController {
             authService.updatePassword(newPasswordDTO);
             return ResponseEntity.ok().build();
         } catch (IllegalArgumentException ex) {
-            return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).build();
+            return ResponseEntity.status(
+                    HttpStatus.NOT_ACCEPTABLE).build();
         }
     }
 }

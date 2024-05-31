@@ -73,6 +73,11 @@ public class QuestionsSearchService {
                 matches = false;
             }
 
+            if(filter.getFlagged() && filter.getFlagged() != question.isFlagged() )
+            {
+                matches = false;
+            }
+
             /*if (filter.getCategories() != null && !filter.getCategories().isEmpty()) {
                 boolean categoryMatch = false;
                 for (CategoryDTO category : question.getCategories()) {

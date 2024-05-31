@@ -71,4 +71,12 @@ public class QuestionSearchResultDTO {
     public void setTimeLimit(Integer timeLimit) {
         this.timeLimit = timeLimit;
     }
+
+    public List<String> getCategories() {
+        return categories;
+    }
+
+    public void setCategories(List<String> categories) {
+        this.categories = categories;
+    }
 }

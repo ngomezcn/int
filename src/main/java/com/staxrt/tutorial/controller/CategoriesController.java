@@ -19,21 +19,22 @@ public class CategoriesController {
     @Autowired
     private CategoryService categoryService;
 
-
     @PostMapping("/remove")
     public ResponseEntity<?> deleteCategoryByName(@RequestBody AddCategoryDTO dto) {
 
-        if(categoryService.deleteCategoryByName(dto.getName()));
+        if(categoryService.deleteCategoryByName(dto.getName())); // TODO: Improve this
         {
-            return ResponseEntity.ok().build();
+            return ResponseEntity.ok()
+                    .build();
         }
-        //return ResponseEntity.notFound().build();
     }
 
     @PostMapping("/add")
     public ResponseEntity<CategoryEntity> createCategory(@RequestBody AddCategoryDTO dto) {
         CategoryEntity savedCategory = categoryService.addCategory(dto.getName());
-        return ResponseEntity.ok(savedCategory);
+        return ResponseEntity.ok(
+                savedCategory
+        );
     }
 
     @GetMapping("/{name}")
@@ -45,12 +46,15 @@ public class CategoriesController {
 
     @GetMapping("/all")
     public ResponseEntity<List<CategoryEntity>> getAllCategories() {
-        return ResponseEntity.ok(categoryService.getAllCategories());
+        return ResponseEntity.ok(
+                categoryService.getAllCategories()
+        );
     }
 
     @PostMapping("/addRelation")
     public ResponseEntity<Void> addCategoryRelation(@RequestBody AddCategoryRelationDTO dto) {
         categoryService.addCategoryRelation(dto.getParentName(), dto.getChildName());
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok()
+                .build();
     }
 }

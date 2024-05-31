@@ -6,6 +6,7 @@ import com.staxrt.tutorial.dto.entities.AnswerDTO;
 import com.staxrt.tutorial.dto.entities.CategoryDTO;
 import com.staxrt.tutorial.dto.entities.QuestionOptionsDTO;
 import com.staxrt.tutorial.dto.entities.ScoreByLevelDTO;
+import com.staxrt.tutorial.entity.CategoryEntity;
 import com.staxrt.tutorial.entity.QuestionEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -74,6 +75,13 @@ public class QuestionConverter {
 
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
         dto.setCreatedAt(dateFormat.format(question.getCreatedAt()));
+
+        List<String> categories = new ArrayList<>();
+        for (CategoryEntity category : question.getCategories())
+        {
+            categories.add(category.getName());
+        }
+        dto.setCategories(categories);
 
         return dto;
     }
