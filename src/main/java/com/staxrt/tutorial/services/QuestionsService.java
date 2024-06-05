@@ -36,8 +36,7 @@ public class QuestionsService {
 
         Optional<QuestionEntity> question = questionRepository.findById(id);
 
-        if(question.isPresent())
-        {
+        if (question.isPresent()) {
             return questionConverter.convertToDTO(question.get());
         }
         throw new ResourceNotFoundException("No question found");

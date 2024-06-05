@@ -25,6 +25,8 @@ import java.util.List;
 @Service
 public class AuthenticationService {
 
+    private static final String rootPath = Thread.currentThread().getContextClassLoader().getResource("").getPath();
+    private static final String configPath = rootPath;
     private final AvatarService avatarService;
     private final UserRepository userRepository;
     private final EmailVerificationRepository emailVerificationRepository;
@@ -33,9 +35,6 @@ public class AuthenticationService {
     private final AuthenticationManager authenticationManager;
     private final JwtTokenUtil jwtTokenUtil;
     private final PasswordEncoder passwordEncoder;
-
-    private static final String rootPath = Thread.currentThread().getContextClassLoader().getResource("").getPath();
-    private static final String configPath = rootPath;
 
     @Autowired
     public AuthenticationService(AvatarService avatarService,
@@ -66,7 +65,7 @@ public class AuthenticationService {
                 .orElseThrow(() -> new UsernameNotFoundException("User not found"));
 
 
-        try{
+        try {
             Authentication authenticate = authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(dto.getEmail(), dto.getPassword())
             );
@@ -109,10 +108,9 @@ public class AuthenticationService {
         UserEntity findByUsername = userRepository.getByUsername(dto.getUsername());
         UserEntity findByEmail = userRepository.getByEmail(dto.getEmail());
 
-        if(findByUsername != null || findByEmail != null) {
+        if (findByUsername != null || findByEmail != null) {
             UserEntity user = (findByUsername != null) ? findByUsername : findByEmail;
-            if(user.isEnabled())
-            {
+            if (user.isEnabled()) {
                 throw new UserAlreadyRegisteredAndVerifiedException("The user is already registered and verified.");
             }
             throw new UserAlreadyRegistered("The user is already registered.");

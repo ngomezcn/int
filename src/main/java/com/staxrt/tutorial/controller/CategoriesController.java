@@ -22,7 +22,7 @@ public class CategoriesController {
     @PostMapping("/remove")
     public ResponseEntity<?> deleteCategoryByName(@RequestBody AddCategoryDTO dto) {
 
-        if(categoryService.deleteCategoryByName(dto.getName())); // TODO: Improve this
+        if (categoryService.deleteCategoryByName(dto.getName())) ; // TODO: Improve this
         {
             return ResponseEntity.ok()
                     .build();

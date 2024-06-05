@@ -21,15 +21,18 @@
 package com.staxrt.tutorial.entity;
 
 import com.staxrt.tutorial.dto.AuthUserDTO;
+import com.staxrt.tutorial.enums.UserRole;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -37,7 +40,36 @@ import java.util.List;
 @Entity
 @Table(name = "users")
 @EntityListeners(AuditingEntityListener.class)
-public class UserEntity implements UserDetails  {
+public class UserEntity implements UserDetails {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private long id;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "role", nullable = false)
+    private UserRole role = UserRole.STUDENT;
+    @Column(name = "username", nullable = false, unique = true)
+    private String username;
+    @Column(name = "email", nullable = false, unique = true)
+    private String email;
+    @Column(name = "password", nullable = false)
+    private String password;
+    @CreationTimestamp
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "created_at", nullable = false)
+    private Date createdAt;
+    @UpdateTimestamp
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "updated_at", nullable = false)
+    private Date updatedAt;
+    @Column(name = "isAccountNonExpired", nullable = false)
+    private Boolean isAccountNonExpired = true;
+    @Column(name = "isAccountNonLocked", nullable = false)
+    private Boolean isAccountNonLocked = true;
+    @Column(name = "isCredentialsNonExpired", nullable = false)
+    private Boolean isCredentialsNonExpired = true;
+    @Column(name = "isEnabled", nullable = false)
+    private Boolean isEnabled = false;
 
     public UserEntity(AuthUserDTO user) {
         this.username = user.username;
@@ -49,62 +81,8 @@ public class UserEntity implements UserDetails  {
 
     }
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
-
-    @Column(name = "role", nullable = false)
-    private String role = "S";
-
-    @Column(name = "username", nullable = false, unique = true)
-    private String username;
-
-    @Column(name = "email", nullable = false, unique = true)
-    private String email;
-
-    @Column(name = "password", nullable = false)
-    private String password;
-
-    @CreationTimestamp
-    @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "created_at", nullable = false)
-    private Date createdAt;
-
-    @UpdateTimestamp
-    @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "updated_at", nullable = false)
-    private Date updatedAt;
-
-    @Column(name = "isAccountNonExpired", nullable = false)
-    private Boolean isAccountNonExpired = true;
-
-    @Column(name = "isAccountNonLocked", nullable = false)
-    private Boolean isAccountNonLocked = true;
-
-    @Column(name = "isCredentialsNonExpired", nullable = false)
-    private Boolean isCredentialsNonExpired = true;
-
-    @Column(name = "isEnabled", nullable = false)
-    private Boolean isEnabled = false;
-
-    public void setAccountNonExpired(Boolean accountNonExpired) {
-        isAccountNonExpired = accountNonExpired;
-    }
-
-    public void setAccountNonLocked(Boolean accountNonLocked) {
-        isAccountNonLocked = accountNonLocked;
-    }
-
-    public void setCredentialsNonExpired(Boolean credentialsNonExpired) {
-        isCredentialsNonExpired = credentialsNonExpired;
-    }
-
-    public void setEnabled(Boolean enabled) {
-        isEnabled = enabled;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
+    public String getPassword() {
+        return password;
     }
 
     public void setPassword(String password) {
@@ -112,17 +90,12 @@ public class UserEntity implements UserDetails  {
     }
 
     @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of();
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    @Override
     public String getUsername() {
         return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     @Override
@@ -130,9 +103,17 @@ public class UserEntity implements UserDetails  {
         return isAccountNonExpired;
     }
 
+    public void setAccountNonExpired(Boolean accountNonExpired) {
+        isAccountNonExpired = accountNonExpired;
+    }
+
     @Override
     public boolean isAccountNonLocked() {
         return isAccountNonLocked;
+    }
+
+    public void setAccountNonLocked(Boolean accountNonLocked) {
+        isAccountNonLocked = accountNonLocked;
     }
 
     @Override
@@ -140,9 +121,17 @@ public class UserEntity implements UserDetails  {
         return isCredentialsNonExpired;
     }
 
+    public void setCredentialsNonExpired(Boolean credentialsNonExpired) {
+        isCredentialsNonExpired = credentialsNonExpired;
+    }
+
     @Override
     public boolean isEnabled() {
         return isEnabled;
+    }
+
+    public void setEnabled(Boolean enabled) {
+        isEnabled = enabled;
     }
 
     public long getId() {
@@ -157,16 +146,21 @@ public class UserEntity implements UserDetails  {
         return email;
     }
 
-    public String getRole() {
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return Collections.singleton(new SimpleGrantedAuthority("ROLE_" + role.name()));
+    }
+
+    public UserRole getRole() {
         return role;
     }
 
-    public void setRole(String role) {
+    public void setRole(UserRole role) {
         this.role = role;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
     }
 
     public Date getCreatedAt() {

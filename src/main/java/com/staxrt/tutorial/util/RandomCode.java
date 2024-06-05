@@ -5,8 +5,7 @@ import java.util.Random;
 public class RandomCode {
     static Random random = new Random();
 
-    public static String get()
-    {
+    public static String get() {
         Random random = new Random();
         StringBuilder codigoBuilder = new StringBuilder();
 

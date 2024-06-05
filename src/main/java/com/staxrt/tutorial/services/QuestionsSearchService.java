@@ -2,7 +2,7 @@ package com.staxrt.tutorial.services;
 
 import com.staxrt.tutorial.converter.CategoryConverter;
 import com.staxrt.tutorial.converter.QuestionConverter;
-import com.staxrt.tutorial.dto.QuestionSearchCategoryDTO;
+import com.staxrt.tutorial.dto.CategoryDropdownDTO;
 import com.staxrt.tutorial.dto.QuestionSearchResultDTO;
 import com.staxrt.tutorial.dto.QuestionSearchFilterDTO;
 import com.staxrt.tutorial.entity.QuestionEntity;
@@ -23,7 +23,7 @@ public class QuestionsSearchService {
 
     @Autowired
     QuestionRepository questionRepository;
-    
+
     @Autowired
     QuestionConverter questionConverter;
 
@@ -33,10 +33,22 @@ public class QuestionsSearchService {
     @Autowired
     CategoryConverter categoryConverter;
 
+    public static List<CategoryDropdownDTO> convertCategoryIds(List<CategoryDropdownDTO> categories, String parentId) {
+        for (CategoryDropdownDTO category : categories) {
+            String newId = parentId.isEmpty() ? category.getName() : parentId + "-" + category.getName();
+            newId = newId.replace(" ", "%");
+            category.setHierarchicalId(newId);
+            if (category.getChildren() != null && !category.getChildren().isEmpty()) {
+                convertCategoryIds(category.getChildren(), newId);
+            }
+        }
+
+        return categories;
+    }
+
     public List<QuestionSearchResultDTO> getSearchResult(Optional<QuestionSearchFilterDTO> filter) {
 
-        if(filter.isPresent())
-        {
+        if (filter.isPresent()) {
             List<QuestionEntity> filteredQuestions = filterQuestions(questionRepository.findAll(), filter.get());
 
             return filteredQuestions.stream()
@@ -46,6 +58,23 @@ public class QuestionsSearchService {
                     .map(questionConverter::convertToQuestionSearchDTO).collect(Collectors.toList());
         }
     }
+
+    /*private List<QuestionEntity> filterQuestions(List<QuestionEntity> allQuestions, QuestionSearchFilterDTO filter) {
+        List<QuestionEntity> result = new ArrayList<>();
+
+        for (QuestionEntity question : allQuestions) {
+
+            if (question.getQuestion().toLowerCase().contains(filter.getQuestion()) || filter.getQuestion().isEmpty()) {
+                result.add(question);
+            }
+
+            if(filter.getCategories().isEmpty())
+            {
+
+            }
+        }
+        return result;
+    }*/
 
     private List<QuestionEntity> filterQuestions(List<QuestionEntity> questions, QuestionSearchFilterDTO filter) {
         List<QuestionEntity> filteredQuestions = new ArrayList<>();
@@ -65,7 +94,7 @@ public class QuestionsSearchService {
                 matches = false;
             }
 
-            if (filter.getCreatedBy() != null && !filter.getCreatedBy().isEmpty() && !filter.getCreatedBy().contains(question.getCreatedBy())) {
+            if (filter.getCreatedByList() != null && !filter.getCreatedByList().isEmpty() && !filter.getCreatedByList().contains(question.getCreatedBy())) {
                 matches = false;
             }
 
@@ -73,8 +102,7 @@ public class QuestionsSearchService {
                 matches = false;
             }
 
-            if(filter.getFlagged() && filter.getFlagged() != question.isFlagged() )
-            {
+            if (filter.getFlagged() && filter.getFlagged() != question.isFlagged()) {
                 matches = false;
             }
 
@@ -99,39 +127,9 @@ public class QuestionsSearchService {
         return filteredQuestions;
     }
 
-    /*private List<QuestionEntity> filterQuestions(List<QuestionEntity> allQuestions, QuestionSearchFilterDTO filter) {
-        List<QuestionEntity> result = new ArrayList<>();
+    public List<CategoryDropdownDTO> getCategoriesSearch() {
 
-        for (QuestionEntity question : allQuestions) {
-
-            if (question.getQuestion().toLowerCase().contains(filter.getQuestion()) || filter.getQuestion().isEmpty()) {
-                result.add(question);
-            }
-
-            if(filter.getCategories().isEmpty())
-            {
-
-            }
-        }
-        return result;
-    }*/
-
-    public static List<QuestionSearchCategoryDTO>  convertCategoryIds(List<QuestionSearchCategoryDTO> categories, String parentId) {
-        for (QuestionSearchCategoryDTO category : categories) {
-            String newId = parentId.isEmpty() ? category.getName() : parentId + "-" + category.getName();
-            newId = newId.replace(" ", "%");
-            category.setHierarchicalId(newId);
-            if (category.getChildren() != null && !category.getChildren().isEmpty()) {
-                convertCategoryIds(category.getChildren(), newId);
-            }
-        }
-
-        return categories;
-    }
-
-    public List<QuestionSearchCategoryDTO> getCategoriesSearch() {
-
-        List<QuestionSearchCategoryDTO> categories = categoryConverter.convertToDTOList(categoryService.getAllCategories());
+        List<CategoryDropdownDTO> categories = categoryConverter.convertToDTOList(categoryService.getAllCategories());
 
         /*long id = 0;
         for (QuestionSearchCategoryDTO category : categories) {

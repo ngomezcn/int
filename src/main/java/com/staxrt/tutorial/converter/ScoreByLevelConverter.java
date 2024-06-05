@@ -7,8 +7,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class ScoreByLevelConverter {
 
-    public ScoreByLevelDTO convertToDTO(ScoreByLevelEntity scoreByLevel)
-    {
+    public ScoreByLevelDTO convertToDTO(ScoreByLevelEntity scoreByLevel) {
         ScoreByLevelDTO dto = new ScoreByLevelDTO();
 
         dto.setId(scoreByLevel.getId());

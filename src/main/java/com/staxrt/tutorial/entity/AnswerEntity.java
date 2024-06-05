@@ -38,12 +38,24 @@ public class AnswerEntity {
         return isCorrect;
     }
 
+    public void setCorrect(Boolean correct) {
+        isCorrect = correct;
+    }
+
     public String getAnswer() {
         return answer;
     }
 
+    public void setAnswer(String answer) {
+        this.answer = answer;
+    }
+
     public String getNumber() {
         return number;
+    }
+
+    public void setNumber(String number) {
+        this.number = number;
     }
 
     public QuestionEntity getQuestion() {
@@ -52,17 +64,5 @@ public class AnswerEntity {
 
     public void setQuestion(QuestionEntity questionEntity) {
         this.questionEntity = questionEntity;
-    }
-
-    public void setNumber(String number) {
-        this.number = number;
-    }
-
-    public void setAnswer(String answer) {
-        this.answer = answer;
-    }
-
-    public void setCorrect(Boolean correct) {
-        isCorrect = correct;
     }
 }

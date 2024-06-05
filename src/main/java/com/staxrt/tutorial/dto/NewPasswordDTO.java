@@ -9,8 +9,16 @@ public class NewPasswordDTO {
         return code;
     }
 
+    public void setCode(String code) {
+        this.code = code;
+    }
+
     public String getPassword() {
         return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     public String getEmail() {
@@ -19,13 +27,5 @@ public class NewPasswordDTO {
 
     public void setEmail(String email) {
         this.email = email;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public void setCode(String code) {
-        this.code = code;
     }
 }

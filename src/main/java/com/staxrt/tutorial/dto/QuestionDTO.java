@@ -16,20 +16,20 @@ public class QuestionDTO {
     private QuestionOptionsDTO questionOptions;
     private ScoreByLevelDTO scoreByLevel;
 
-    public void setId(long id) {
-        this.id = id;
-    }
-
     public long getId() {
         return id;
     }
 
-    public void setQuestion(String question) {
-        this.question = question;
+    public void setId(long id) {
+        this.id = id;
     }
 
     public String getQuestion() {
         return question;
+    }
+
+    public void setQuestion(String question) {
+        this.question = question;
     }
 
     public List<CategoryDTO> getCategories() {
@@ -52,16 +52,16 @@ public class QuestionDTO {
         return questionOptions;
     }
 
+    public void setQuestionOptions(QuestionOptionsDTO QuestionOptions) {
+        this.questionOptions = QuestionOptions;
+    }
+
     public String getMediaPath() {
         return mediaPath;
     }
 
     public void setMediaPath(String mediaPath) {
         this.mediaPath = mediaPath;
-    }
-
-    public void setQuestionOptions(QuestionOptionsDTO QuestionOptions) {
-        this.questionOptions = QuestionOptions;
     }
 
     public ScoreByLevelDTO getScoreByLevel() {

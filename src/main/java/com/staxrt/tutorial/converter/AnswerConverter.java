@@ -6,8 +6,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class AnswerConverter {
-    public AnswerDTO convertToDTO(AnswerEntity answer)
-    {
+    public AnswerDTO convertToDTO(AnswerEntity answer) {
         AnswerDTO dto = new AnswerDTO();
 
         dto.setId(answer.getId());

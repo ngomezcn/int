@@ -24,20 +24,6 @@ public class AvatarService {
     @Value("${upload.dir}")
     private String uploadDir;
 
-    public void createAvatar(UserEntity user) throws IOException
-    {
-        String imageUrl = "https://ui-avatars.com/api/?background=0D8ABC&color=fff&name=" + user.getEmail() + "&length=2&bold=true"; // TODO: Obtener desdte application.properties
-
-        RestTemplate restTemplate = new RestTemplate();
-        ResponseEntity<byte[]> response = restTemplate.exchange(imageUrl, HttpMethod.GET, null, byte[].class);
-        byte[] imageBytes = response.getBody();
-
-        String filename = generateHash(user.getEmail()) + ".png";
-        FileOutputStream fos = new FileOutputStream(uploadDir + filename);
-        fos.write(imageBytes);
-        fos.close();
-    }
-
     public static String generateHash(String input) {
         try {
             MessageDigest md = MessageDigest.getInstance("MD5");
@@ -52,6 +38,19 @@ public class AvatarService {
         } catch (NoSuchAlgorithmException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public void createAvatar(UserEntity user) throws IOException {
+        String imageUrl = "https://ui-avatars.com/api/?background=0D8ABC&color=fff&name=" + user.getEmail() + "&length=2&bold=true"; // TODO: Obtener desdte application.properties
+
+        RestTemplate restTemplate = new RestTemplate();
+        ResponseEntity<byte[]> response = restTemplate.exchange(imageUrl, HttpMethod.GET, null, byte[].class);
+        byte[] imageBytes = response.getBody();
+
+        String filename = generateHash(user.getEmail()) + ".png";
+        FileOutputStream fos = new FileOutputStream(uploadDir + filename);
+        fos.write(imageBytes);
+        fos.close();
     }
 
     public Resource getAvatarImageByEmail(String imageName) throws IOException, ResourceNotFoundException {

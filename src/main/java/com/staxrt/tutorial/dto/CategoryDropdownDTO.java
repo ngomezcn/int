@@ -2,12 +2,12 @@ package com.staxrt.tutorial.dto;
 
 import java.util.List;
 
-public class QuestionSearchCategoryDTO {
+public class CategoryDropdownDTO {
     Long id;
     String hierarchicalId = "";
     String name;
     Boolean isChecked = false;
-    List<QuestionSearchCategoryDTO> children;
+    List<CategoryDropdownDTO> children;
 
     public Long getId() {
         return id;
@@ -25,11 +25,11 @@ public class QuestionSearchCategoryDTO {
         this.name = name;
     }
 
-    public List<QuestionSearchCategoryDTO> getChildren() {
+    public List<CategoryDropdownDTO> getChildren() {
         return children;
     }
 
-    public void setChildren(List<QuestionSearchCategoryDTO> children) {
+    public void setChildren(List<CategoryDropdownDTO> children) {
         this.children = children;
     }
 

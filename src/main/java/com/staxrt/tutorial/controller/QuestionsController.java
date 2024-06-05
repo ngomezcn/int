@@ -31,4 +31,12 @@ public class QuestionsController {
                 questionService.getQuestionById(Long.valueOf(id))
         );
     }
+
+    @GetMapping("/add-category-relation")
+    public ResponseEntity<QuestionDTO> addCategoryToQuestion(@PathVariable String id) throws ResourceNotFoundException {
+
+        return ResponseEntity.ok(
+                questionService.getQuestionById(Long.valueOf(id))
+        );
+    }
 }

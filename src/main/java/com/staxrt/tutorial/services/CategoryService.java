@@ -80,13 +80,11 @@ public class CategoryService {
         Optional<CategoryEntity> parent = categoryRepository.findByName(parentName);
         Optional<CategoryEntity> child = categoryRepository.findByName(childName);
 
-        if(!parent.isPresent())
-        {
+        if (!parent.isPresent()) {
             parent = Optional.ofNullable(this.addCategory(parentName));
         }
 
-        if(!child.isPresent())
-        {
+        if (!child.isPresent()) {
             child = Optional.ofNullable(this.addCategory(childName));
         }
 

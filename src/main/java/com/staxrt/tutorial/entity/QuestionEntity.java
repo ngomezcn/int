@@ -37,7 +37,8 @@ public class QuestionEntity extends AuditableEntity {
             joinColumns = @JoinColumn(name = "question_id"),
             inverseJoinColumns = @JoinColumn(name = "category_id")
     )
-    private List<CategoryEntity> categories;;
+    private List<CategoryEntity> categories;
+    ;
 
     @OneToMany(mappedBy = "questionEntity", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<AnswerEntity> answerEntities;

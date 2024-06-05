@@ -5,7 +5,7 @@ import java.util.List;
 public class QuestionSearchRootCategoryDTO {
     Long id;
     String name;
-    List<QuestionSearchCategoryDTO> children;
+    List<CategoryDropdownDTO> children;
 
     public Long getId() {
         return id;
@@ -23,11 +23,11 @@ public class QuestionSearchRootCategoryDTO {
         this.name = name;
     }
 
-    public List<QuestionSearchCategoryDTO> getChildren() {
+    public List<CategoryDropdownDTO> getChildren() {
         return children;
     }
 
-    public void setChildren(List<QuestionSearchCategoryDTO> children) {
+    public void setChildren(List<CategoryDropdownDTO> children) {
         this.children = children;
     }
 }

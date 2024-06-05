@@ -10,7 +10,8 @@ import org.springframework.transaction.annotation.Transactional;
 @Component
 public class TransactionalCheckAspect {
 
-    /*@Before("@within(org.springframework.stereotype.Controller) && execution(* *(..)) && @annotation(transactional)")
+    /*
+    @Before("@within(org.springframework.stereotype.Controller) && execution(* *(..)) && @annotation(transactional)")
     public void checkTransactionalUsageInControllers(JoinPoint joinPoint, Transactional transactional) {
         System.out.println("ERROR: @Transactional annotation detected in controller method: " + joinPoint.getSignature());
 

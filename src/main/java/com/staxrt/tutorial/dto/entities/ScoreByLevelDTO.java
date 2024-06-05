@@ -18,20 +18,20 @@ public class ScoreByLevelDTO {
         return id;
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public Map<EducationLevel, Integer> getEducationLevelScores() {
-        return educationLevelScores;
-    }
-
     public void setId(Long id) {
         this.id = id;
     }
 
+    public String getName() {
+        return name;
+    }
+
     public void setName(String name) {
         this.name = name;
+    }
+
+    public Map<EducationLevel, Integer> getEducationLevelScores() {
+        return educationLevelScores;
     }
 
     public void setEducationLevelScores(Map<EducationLevel, Integer> educationLevelScores) {

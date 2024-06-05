@@ -26,6 +26,7 @@ import com.staxrt.tutorial.entity.UserEntity;
 import com.staxrt.tutorial.exception.ResourceNotFoundException;
 import com.staxrt.tutorial.repository.UserRepository;
 import com.staxrt.tutorial.services.AvatarService;
+import com.staxrt.tutorial.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.http.MediaType;
@@ -49,44 +50,46 @@ import java.util.List;
 @RequestMapping("/api/v1/user")
 public class UserController {
 
-  @Autowired
-  private UserRepository userRepository;
+    @Autowired
+    UserService userService;
 
-  @Autowired
-  AvatarService avatarService;
+    @Autowired
+    AvatarService avatarService;
 
-  @GetMapping("/users")
-  public List<UserEntity> getAllUsers() {
-    List<UserEntity> a = userRepository.findAll();
-     return a;
-  }
+    @GetMapping("/users")
+    public List<UserEntity> getAllUsers() {
+        //List<UserEntity> a = userRepository.findAll();
+        return new ArrayList<>();
+    }
 
-  @GetMapping("/teacher-roster")
-  public ResponseEntity<List<UserDTO>> getAllTimeLimits() {
+    @GetMapping("/teacher-roster")
+    public ResponseEntity<List<UserDTO>> getTeacherRoster() {
 
-      return ResponseEntity.ok(new ArrayList<>());
-  }
+        return ResponseEntity.ok(
+                userService.getTeacherRoster()
+        );
+    }
 
-  @GetMapping("/avatar/{email}")
-  public ResponseEntity<Resource> getUserAvatar(@PathVariable String email) throws IOException, ResourceNotFoundException {
+    @GetMapping("/avatar/{email}")
+    public ResponseEntity<Resource> getUserAvatar(@PathVariable String email) throws IOException, ResourceNotFoundException {
 
-    Resource resource = avatarService.getAvatarImageByEmail(email);
+        Resource resource = avatarService.getAvatarImageByEmail(email);
 
-    return ResponseEntity.ok()
-            .contentType(MediaType.IMAGE_JPEG)
-            .body(resource);
-  }
+        return ResponseEntity.ok()
+                .contentType(MediaType.IMAGE_JPEG)
+                .body(resource);
+    }
 
-  @PostMapping("/create-avatar")
-  @ResponseBody
-  public ResponseEntity<String> createAvatar() throws IOException {
+    @PostMapping("/create-avatar")
+    @ResponseBody
+    public ResponseEntity<String> createAvatar() throws IOException {
 
-    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-    UserEntity user = (UserEntity) authentication.getPrincipal();
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        UserEntity user = (UserEntity) authentication.getPrincipal();
 
 
-    avatarService.createAvatar(user);
+        avatarService.createAvatar(user);
 
-    return ResponseEntity.ok().build();
-  }
+        return ResponseEntity.ok().build();
+    }
 }

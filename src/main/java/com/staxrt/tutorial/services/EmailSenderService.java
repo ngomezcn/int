@@ -12,11 +12,10 @@ import java.io.IOException;
 @Service
 public class EmailSenderService {
 
-    @Autowired
-    private JavaMailSender mailSender;
-
     static private final String rootPath = Thread.currentThread().getContextClassLoader().getResource("").getPath();
     static private final String configPath = rootPath;
+    @Autowired
+    private JavaMailSender mailSender;
 
     public void sendEmail(String to, String subject, String body) {
         SimpleMailMessage message = new SimpleMailMessage();

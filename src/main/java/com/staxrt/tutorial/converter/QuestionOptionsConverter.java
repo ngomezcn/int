@@ -7,8 +7,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class QuestionOptionsConverter {
 
-    public QuestionOptionsDTO convertToDTO(QuestionOptionsEntity QuestionOptions)
-    {
+    public QuestionOptionsDTO convertToDTO(QuestionOptionsEntity QuestionOptions) {
         QuestionOptionsDTO dto = new QuestionOptionsDTO();
 
         dto.setId(QuestionOptions.getId());

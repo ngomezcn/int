@@ -77,8 +77,7 @@ public class QuestionConverter {
         dto.setCreatedAt(dateFormat.format(question.getCreatedAt()));
 
         List<String> categories = new ArrayList<>();
-        for (CategoryEntity category : question.getCategories())
-        {
+        for (CategoryEntity category : question.getCategories()) {
             categories.add(category.getName());
         }
         dto.setCategories(categories);

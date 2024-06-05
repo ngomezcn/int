@@ -25,20 +25,20 @@ public class QuestionOptionsEntity {
         return id;
     }
 
-    public AnswerType getAnswerType() {
-        return answerType;
-    }
-
-    public Integer getTimeLimit() {
-        return timeLimit;
-    }
-
     public void setId(long id) {
         this.id = id;
     }
 
+    public AnswerType getAnswerType() {
+        return answerType;
+    }
+
     public void setAnswerType(AnswerType answerType) {
         this.answerType = answerType;
+    }
+
+    public Integer getTimeLimit() {
+        return timeLimit;
     }
 
     public void setTimeLimit(Integer timeLimit) {

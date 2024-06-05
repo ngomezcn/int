@@ -10,6 +10,14 @@ import javax.persistence.*;
 @EntityListeners(AuditingEntityListener.class)
 public class ResetPasswordEntity {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private long id;
+    @Column(name = "email", nullable = false)
+    private String email;
+    @Column(name = "code", nullable = false)
+    private String code;
+
     public ResetPasswordEntity(String email) {
         this.email = email;
         this.code = RandomCode.get();
@@ -18,16 +26,6 @@ public class ResetPasswordEntity {
     public ResetPasswordEntity() {
 
     }
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
-
-    @Column(name = "email", nullable = false)
-    private String email;
-
-    @Column(name = "code", nullable = false)
-    private String code;
 
     public String getEmail() {
         return email;

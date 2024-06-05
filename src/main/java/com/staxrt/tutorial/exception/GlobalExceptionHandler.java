@@ -39,79 +39,79 @@ import java.util.Date;
 @ControllerAdvice
 public class GlobalExceptionHandler {
 
-  @ExceptionHandler(UserAlreadyRegistered.class)
-  public ResponseEntity<?> userAlreadyRegistered(
-          UserAlreadyRegistered ex, WebRequest request) {
-    ErrorResponse errorDetails =
-            new ErrorResponse(new Date(), HttpStatus.CONFLICT.toString(), ex.getMessage(), request.getDescription(false), ex.getClass().getName());
-    return new ResponseEntity<>(errorDetails, HttpStatus.CONFLICT);
-  }
+    @ExceptionHandler(UserAlreadyRegistered.class)
+    public ResponseEntity<?> userAlreadyRegistered(
+            UserAlreadyRegistered ex, WebRequest request) {
+        ErrorResponse errorDetails =
+                new ErrorResponse(new Date(), HttpStatus.CONFLICT.toString(), ex.getMessage(), request.getDescription(false), ex.getClass().getName());
+        return new ResponseEntity<>(errorDetails, HttpStatus.CONFLICT);
+    }
 
-  @ExceptionHandler(UserAlreadyRegisteredAndVerifiedException.class)
-  public ResponseEntity<?> userAlreadyRegisteredAndVerifiedException(
-          UserAlreadyRegisteredAndVerifiedException ex, WebRequest request) {
-    ErrorResponse errorDetails =
-            new ErrorResponse(new Date(), HttpStatus.CONFLICT.toString(), ex.getMessage(), request.getDescription(false), ex.getClass().getName());
-    return new ResponseEntity<>(errorDetails, HttpStatus.CONFLICT);
-  }
+    @ExceptionHandler(UserAlreadyRegisteredAndVerifiedException.class)
+    public ResponseEntity<?> userAlreadyRegisteredAndVerifiedException(
+            UserAlreadyRegisteredAndVerifiedException ex, WebRequest request) {
+        ErrorResponse errorDetails =
+                new ErrorResponse(new Date(), HttpStatus.CONFLICT.toString(), ex.getMessage(), request.getDescription(false), ex.getClass().getName());
+        return new ResponseEntity<>(errorDetails, HttpStatus.CONFLICT);
+    }
 
-  @ExceptionHandler(UsernameNotFoundException.class)
-  public ResponseEntity<?> usernameNotFoundException(
-          UsernameNotFoundException ex, WebRequest request) {
-    ErrorResponse errorDetails =
-            new ErrorResponse(new Date(), HttpStatus.NOT_FOUND.toString(), ex.getMessage(), request.getDescription(false), ex.getClass().getName());
-    return new ResponseEntity<>(errorDetails, HttpStatus.NOT_FOUND);
-  }
+    @ExceptionHandler(UsernameNotFoundException.class)
+    public ResponseEntity<?> usernameNotFoundException(
+            UsernameNotFoundException ex, WebRequest request) {
+        ErrorResponse errorDetails =
+                new ErrorResponse(new Date(), HttpStatus.NOT_FOUND.toString(), ex.getMessage(), request.getDescription(false), ex.getClass().getName());
+        return new ResponseEntity<>(errorDetails, HttpStatus.NOT_FOUND);
+    }
 
-  @ExceptionHandler(BadCredentialsException.class)
-  public ResponseEntity<?> badCredentialsExceptionException(
-          BadCredentialsException ex, WebRequest request) {
-    ErrorResponse errorDetails =
-            new ErrorResponse(new Date(), HttpStatus.UNAUTHORIZED.toString(), ex.getMessage(), request.getDescription(false), ex.getClass().getName());
-    return new ResponseEntity<>(errorDetails, HttpStatus.UNAUTHORIZED);
-  }
+    @ExceptionHandler(BadCredentialsException.class)
+    public ResponseEntity<?> badCredentialsExceptionException(
+            BadCredentialsException ex, WebRequest request) {
+        ErrorResponse errorDetails =
+                new ErrorResponse(new Date(), HttpStatus.UNAUTHORIZED.toString(), ex.getMessage(), request.getDescription(false), ex.getClass().getName());
+        return new ResponseEntity<>(errorDetails, HttpStatus.UNAUTHORIZED);
+    }
 
-   /**
-   * Resource not found exception response entity.
-   *
-   * @param ex the ex
-   * @param request the request
-   * @return the response entity
-   */
-  @ExceptionHandler(ResourceNotFoundException.class)
-  public ResponseEntity<?> resourceNotFoundException(
-      ResourceNotFoundException ex, WebRequest request) {
-    ErrorResponse errorDetails =
-        new ErrorResponse(new Date(), HttpStatus.NOT_FOUND.toString(), ex.getMessage(), request.getDescription(false), ex.getClass().getName());
-    return new ResponseEntity<>(errorDetails, HttpStatus.NOT_FOUND);
-  }
+    /**
+     * Resource not found exception response entity.
+     *
+     * @param ex      the ex
+     * @param request the request
+     * @return the response entity
+     */
+    @ExceptionHandler(ResourceNotFoundException.class)
+    public ResponseEntity<?> resourceNotFoundException(
+            ResourceNotFoundException ex, WebRequest request) {
+        ErrorResponse errorDetails =
+                new ErrorResponse(new Date(), HttpStatus.NOT_FOUND.toString(), ex.getMessage(), request.getDescription(false), ex.getClass().getName());
+        return new ResponseEntity<>(errorDetails, HttpStatus.NOT_FOUND);
+    }
 
-  /**
-   * User not activated exception response entity.
-   *
-   * @param ex the ex
-   * @param request the requests
-   * @return the response entity
-   */
-  @ExceptionHandler(DisabledException.class)
-  public ResponseEntity<?> userNotActivatedException(
-          DisabledException ex, WebRequest request) {
-    ErrorResponse errorDetails =
-            new ErrorResponse(new Date(), HttpStatus.FORBIDDEN.toString(), ex.getMessage(), request.getDescription(false), ex.getClass().getName());
-    return new ResponseEntity<>(errorDetails, HttpStatus.FORBIDDEN);
-  }
+    /**
+     * User not activated exception response entity.
+     *
+     * @param ex      the ex
+     * @param request the requests
+     * @return the response entity
+     */
+    @ExceptionHandler(DisabledException.class)
+    public ResponseEntity<?> userNotActivatedException(
+            DisabledException ex, WebRequest request) {
+        ErrorResponse errorDetails =
+                new ErrorResponse(new Date(), HttpStatus.FORBIDDEN.toString(), ex.getMessage(), request.getDescription(false), ex.getClass().getName());
+        return new ResponseEntity<>(errorDetails, HttpStatus.FORBIDDEN);
+    }
 
-  /**
-   * Globle excpetion handler response entity.
-   *
-   * @param ex the ex
-   * @param request the request
-   * @return the response entity
-   */
-  @ExceptionHandler(Exception.class)
-  public ResponseEntity<?> globleExcpetionHandler(Exception ex, WebRequest request) {
-    ErrorResponse errorDetails =
-        new ErrorResponse(new Date(), HttpStatus.INTERNAL_SERVER_ERROR.toString() ,ex.getMessage(), request.getDescription(false), ex.getClass().getName());
-    return new ResponseEntity<>(errorDetails, HttpStatus.INTERNAL_SERVER_ERROR);
-  }
+    /**
+     * Globle excpetion handler response entity.
+     *
+     * @param ex      the ex
+     * @param request the request
+     * @return the response entity
+     */
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<?> globleExcpetionHandler(Exception ex, WebRequest request) {
+        ErrorResponse errorDetails =
+                new ErrorResponse(new Date(), HttpStatus.INTERNAL_SERVER_ERROR.toString(), ex.getMessage(), request.getDescription(false), ex.getClass().getName());
+        return new ResponseEntity<>(errorDetails, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
 }

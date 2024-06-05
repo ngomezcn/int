@@ -9,7 +9,7 @@ public class QuestionSearchFilterDTO {
     Date startDate;
     Date endDate;
     Boolean flagged;
-    List<String> createdBy;
+    List<String> createdByList;
     List<String> answerTypeList;
     List<String> categories;
 
@@ -45,12 +45,12 @@ public class QuestionSearchFilterDTO {
         this.flagged = flagged;
     }
 
-    public List<String> getCreatedBy() {
-        return createdBy;
+    public List<String> getCreatedByList() {
+        return createdByList;
     }
 
-    public void setCreatedBy(List<String> createdBy) {
-        this.createdBy = createdBy;
+    public void setCreatedByList(List<String> createdByList) {
+        this.createdByList = createdByList;
     }
 
     public List<String> getAnswerTypeList() {

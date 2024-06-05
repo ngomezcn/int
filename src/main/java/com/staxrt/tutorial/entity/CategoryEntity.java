@@ -38,20 +38,20 @@ public class CategoryEntity extends AuditableEntity {
         return name;
     }
 
-    public Set<CategoryEntity> getParents() {
-        return parents;
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public Set<CategoryEntity> getChildren() {
-        return children;
+    public Set<CategoryEntity> getParents() {
+        return parents;
     }
 
     public void setParents(Set<CategoryEntity> parents) {
         this.parents = parents;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public Set<CategoryEntity> getChildren() {
+        return children;
     }
 
     public void setChildren(Set<CategoryEntity> children) {

@@ -8,12 +8,12 @@ public class SignUpDTO {
         return email;
     }
 
-    public String getCode() {
-        return code;
-    }
-
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public String getCode() {
+        return code;
     }
 
     public void setCode(String code) {

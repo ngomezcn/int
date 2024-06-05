@@ -13,6 +13,18 @@ import java.util.Date;
 @EntityListeners(AuditingEntityListener.class)
 public class EmailVerificationEntity {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private long id;
+    @Column(name = "email", nullable = false)
+    private String email;
+    @Column(name = "code", nullable = false)
+    private String code;
+    @CreationTimestamp
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "created_at", nullable = false)
+    private Date createdAt;
+
     public EmailVerificationEntity() {
 
     }
@@ -22,27 +34,20 @@ public class EmailVerificationEntity {
         this.code = RandomCode.get();
     }
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
-
-    @Column(name = "email", nullable = false)
-    private String email;
-
-    @Column(name = "code", nullable = false)
-    private String code;
-
-    @CreationTimestamp
-    @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "created_at", nullable = false)
-    private Date createdAt;
-
     public Date getCreatedAt() {
         return createdAt;
     }
 
+    public void setCreatedAt(Date createdAt) {
+        this.createdAt = createdAt;
+    }
+
     public String getCode() {
         return code;
+    }
+
+    public void setCode(String code) {
+        this.code = code;
     }
 
     public String getemail() {
@@ -59,14 +64,6 @@ public class EmailVerificationEntity {
 
     public void setemail(String email) {
         this.email = email;
-    }
-
-    public void setCode(String code) {
-        this.code = code;
-    }
-
-    public void setCreatedAt(Date createdAt) {
-        this.createdAt = createdAt;
     }
 
 
